@@ -1,0 +1,36 @@
+if(isset($_POST['submit']))
+{
+	//$name = $_POST['id'];
+	//echo "You have Updated: <b> $name </b><br>";
+	$sql="INSERT INTO ";
+	$i=0;
+	$feilds="";
+	$values="";
+ 	foreach($_POST as $x =>$x_value){
+                if($i==0){
+			$sql=$sql . $x_value;
+		} elseif($i==1){
+			$feilds = $feilds . "id, ";
+			$values = $values . "NULL, ";
+		} elseif ($i==count($_POST)-2){
+                	$feilds = $feilds . $x;
+			$values = $values . "'" . $x_value . "'";
+		} elseif ($i==count($_POST)-1){
+		} else {
+			$feilds = $feilds . $x . ", ";
+			$values = $values . "'" . $x_value . "', ";
+		}
+		$i++;
+
+        }
+	$sql= $sql . " (" . $feilds . ") VALUES (" . $values . ")";
+	echo "<br>" . $sql;
+	echo "<br>";
+	echo "Feilds:" . $feilds;
+	echo "<br>";
+	echo "Values" . $values;
+	include ('conn.php');
+	$result = $conn->query($sql);
+	$conn->close();
+	exit;
+}

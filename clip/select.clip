@@ -1,0 +1,39 @@
+include ('conn.php');
+$sql = "SELECT * FROM ". $_GET["table"];
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+  echo "<TABLE id='drug_table'>";
+	//load data into 'table[][]'
+  $i=0;
+  while($row = $result->fetch_assoc()) {
+	$table[$i]=$row;
+	$i++;
+  }
+	//count of rows
+  echo "<br><h1>TOTAL '" .  $_GET["table"] . "': " . count($table) . "<h1>";
+	//List keys and print as table headers
+  foreach($table[0] as $x =>$x_value){
+	echo "<th>" . $x . "</th>";
+	if (!isset($PrimaryKey)){
+		$PrimaryKey=$x;
+	}
+  }
+	echo "<th>EDIT</th>";
+	echo "<th>DELETE</th>";
+  for($r=0;$r<count($table);$r++){
+	echo "<tr>";
+	foreach($table[$r] as $x =>$x_value){
+		echo tablecell($x_value);
+	}
+	echo tablecell("<a href=edit.php?table=" . $_GET["table"] ."&id=" . $table[$r][$PrimaryKey] . ">Edit</a>");
+	echo tablecell("<a href=delete.php?table=" . $_GET["table"] ."&id=" . $table[$r][$PrimaryKey] . ">Delete</a>");
+	echo "</tr>";
+  }
+
+  echo "</TABLE>";
+} else {
+  echo "0 results";
+//  header("Location: AddStudent.php?barcode=" . $_POST["barcode"]);
+  exit;
+}
+$conn->close();
