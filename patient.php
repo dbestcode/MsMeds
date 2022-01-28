@@ -63,73 +63,44 @@ function print_drug_admin(){
 
 }
 
-//----------------------------------CODE SAVED FOR WHEN MED ORDERS ARE DATA AND NOT IN PDF-------------------------------
-/*
-
-function printmar(){
-	include "conn.php";
+function select_notes(){
 	// Create connection &	// Check connection
-	$conn = new mysqli($servername, $username, $password, $dbname);
-	if ($conn->connect_error) {
-	  die("Connection failed: " . $conn->connect_error);
-	}
-	//--load patient orders from database into array 'medorders'
-	$sql = "SELECT drug_orders.OrderID, drug_orders.DrugID, drugs.Drug, drug_orders.Route, drug_orders.Dose  FROM drug_orders INNER JOIN drugs ON drugs.DrugID = drug_orders.DrugID WHERE drug_orders.PatientID=" . $_SESSION["PatientID"];
+	include "conn.php";
+ 	//--load drug_admins from database into array 'medorders'
+	$sql = "SELECT n.DateTime, n.HR, n.RR, n.Bp, n.Spo, n.Note, u.FirstName,u.LastName FROM nurse_notes as n INNER JOIN users as u ON u.id=n.UserID WHERE n.PatientID=" . 
+	$_SESSION["PatientID"] . " ORDER BY n.DateTime DESC";
+
 	$result = $conn->query($sql);
 	if ($result->num_rows > 0) {
-	  $i=0;
-	  while($row = $result->fetch_assoc()) {
-		//echo print_r($row). "<BR>";
-		//echo $row["OrderID"] . ", " . $row["DrugID"]. ", " . $row["PatientID"]. ", ". $row["Dose"]. ", <br>";
-		$medorder[$i]=$row;
-		$i++;
-	  }
-	}
-	//load all adminitrations
-	// for each medication order select any matching admins and add to a new feild of admins
-	for($x = 0; $x < count($medorder); $x++) {
-		$sql = "SELECT * FROM drug_administration WHERE OrderID=" . $medorder[$x]["OrderID"] . " AND UserID=" . 
-			$_SESSION["UserID"] . " ORDER BY Admin_Time ASC";
-		$result = $conn->query($sql);
-		if ($result->num_rows > 0) {
-		  while($row = $result->fetch_assoc()) {
-			//echo print_r($row) . "<BR>";
-			if ($medorder[$x]["OrderID"] == $row["OrderID"]){
-				$medorder[$x]["Admin_Time"]=$medorder[$x]["Admin_Time"] . " " . $row["Admin_Time"];
-			}
-		  }
+		echo "<table class='nnote'>";
+		while($row = $result->fetch_assoc()) {
+			echo "<tr>";
+			echo "<th colspan='4'>Note Charted " . $row["DateTime"] . " by " . $_SESSION['uFirstName'] . "</th>";
+			echo "</tr>";
+			echo tablerow(tablecell("HR:<br>" . $row["HR"]) .	tablecell("RR:<br>" . $row["RR"])) ;
+			echo tablerow(tablecell("BP:<br>" . $row["Bp"]) .	tablecell("SpO<sub>2</sub><br>" . $row["Spo"])) ;
+			echo tablerow("<td colspan='4'><p id='notep'><pre>" . $row["Note"] 
+			. "</pre></td>");
 		}
+		echo "</table>";
 
+	} else {
+		echo "<table class='nnote'>";
+		echo tablerow(tablecell("No notes made yet."));
+		echo "</table>";
 	}
 	$conn->close();
 
-//draw full MAR--------------------------------------------------------------------//
-	echo "<table>";
-	echo "<tr>";
-	echo tablecell("Order");
-	echo tablecell("Prev Admins");
-	$hour=100;
-	echo tablecell("New Admin");
-	echo "</tr>\n";
-	for($x = 0; $x < count($medorder); $x++) {
-		echo "<tr>";
-		echo tablecell($medorder[$x]["Drug"] . ", " . $medorder[$x]["Dose"] . ", " . $medorder[$x]["Route"]);
-		echo tablecell($medorder[$x]["Admin_Time"]);
-		echo tablecell("<a href='ScanDrug.php?drugid=" . $medorder[$x]["DrugID"]. "'>id</a>");
-		echo "</tr>\n";
-	}
-	echo "</table>";
 }
-//----------------------------------CODE SAVED FOR WHEN MED ORDERS ARE DATA AND NOT IN PDF-------------------------------
-*/
+
 
 function printnotes(){
 	//called in the Nursing Notes tab to prpagate the notes
 	$filename = "txt/" . $_SESSION["PatientID"] . ".nur";
 	if (file_exists($filename)) {
-	$myfile = fopen($filename, "r") or die("Patient has no notes.");
-	echo fread($myfile,filesize($filename));
-	fclose($myfile);
+		$myfile = fopen($filename, "r") or die("Patient has no notes.");
+		echo fread($myfile,filesize($filename));
+		fclose($myfile);
 	}
 }
 function printdefaultnote($filename){
@@ -146,36 +117,33 @@ error_reporting(E_ALL);
 //require('php/patientaccess.php');
 //if this is a reload add nursing note to file
 if(isset($_POST['newnote'])) {
-	$fname = "txt/" . $_SESSION["PatientID"] . ".nur";
-	$foutput = "<table class='nnote'>" . PHP_EOL;
-	$foutput .= "<tr>" . PHP_EOL;
-	$foutput .= "<th colspan='4'><span id='noteh'>Note Charted " .  htmlspecialchars($_POST['ntime']) . " by " . $_SESSION['uFirstName'] . "</span></th>" . PHP_EOL;
-	$foutput .= "</tr>" . PHP_EOL;
-	$foutput .= "<tr>" . PHP_EOL;
-	$foutput .= "<td>HR</td>" . PHP_EOL;
-	$foutput .= "<td>" .  htmlspecialchars($_POST['nhr']) . "</td>" . PHP_EOL;
-	$foutput .= "<td rowspan='4'><p id='notep'><pre>" . PHP_EOL . htmlspecialchars($_POST['nnote']) . PHP_EOL;
-	$foutput .= "</p></pre></td>" . PHP_EOL;
-	$foutput .= "</tr>" . PHP_EOL;
-	$foutput .= "<tr>" . PHP_EOL;
-	$foutput .= "<td>RR</td>" . PHP_EOL;
-	$foutput .= "<td>" .  htmlspecialchars($_POST['nrr']) . "</td>" . PHP_EOL;
-	$foutput .= "</tr>" . PHP_EOL;
-	$foutput .= "<tr>" . PHP_EOL;
-	$foutput .= "<td>BP</td>" . PHP_EOL;
-	$foutput .= "<td>" .  htmlspecialchars($_POST['nbp']) . "</td>" . PHP_EOL;
-	$foutput .= "</tr>" . PHP_EOL;
-	$foutput .= "<tr>" . PHP_EOL;
-	$foutput .= "<td>SpO<sub>2</sub></td>" . PHP_EOL;
-	$foutput .= "<td>" . $_POST['noo'] . "</td>" . PHP_EOL;
-	$foutput .= "</tr>" . PHP_EOL;
-	$foutput .= "</table>" . PHP_EOL;
-	file_put_contents("txt/" . $_SESSION["PatientID"] . ".nur", $foutput, FILE_APPEND);
+	//db connection object
+	include "conn.php";
+	//escape all user input for injections
+	foreach ($_POST as $key=>$val){
+		$sqlsafe=mysqli_real_escape_string($conn,$val);
+		$safevar[$key]=htmlspecialchars($sqlsafe);
+//		echo $safevar[$key];
+	}
+//	echo "<br>";
+	$sql="INSERT INTO `nurse_notes` (`id`, `UserID`, `PatientID`, `DateTime`, `HR`, `RR`, `Bp`, `Spo`, `Note`) VALUES " .
+	"(NULL, '" .
+	$_SESSION["UserID"] . "', '" .
+	$_SESSION["PatientID"] . "', " .
+	"CURRENT_TIMESTAMP, '" .
+	$safevar["HR"] . "', '" .
+	$safevar["RR"] . "', '" .
+	$safevar["Bp"] . "', '" .
+	$safevar["Spo"] . "', '" .
+	$safevar["Note"] . "')";
+//	echo $sql;
+//	exit;
+	$result = $conn->query($sql);
+        $conn->close();
 }
 if(isset($_POST["drugid"])) {
         include "conn.php";
 //      echo "Finding Drug...   " . $_POST["drugid"] . "<BR>";
-        $file_name = "txt/" . $_SESSION["PatientID"];
         $unsafe_variable = $_POST["drugid"];
         $safe_variable = mysqli_real_escape_string($conn,$unsafe_variable);
         //open record with barcode scanned
@@ -308,13 +276,13 @@ if(isset($_POST["drugid"])) {
 
    <table class='nnote'>
 	<form method='post' action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">  
-	<tr><td>"Sim" Time:</td><td><input type='text' name='ntime' value="<?php echo date("m/d/y") . " :";?>"></td></tr>
+	<tr><td>"Sim" Time:</td><td><input type='text' name='DateTime' value="<?php echo date("m/d/y") . " :";?>"></td></tr>
 	<tr><td colspan="2">
-	Note:<BR> <textarea name='nnote' rows='10' cols='60'><?php printdefaultnote("txt/default-note.txt"); ?></textarea>
+	Note:<BR> <textarea name='Note' rows='10' cols='60'><?php printdefaultnote("txt/default-note.txt"); ?></textarea>
 	</td><tr>
 	<tr><td colspan="2" style='text-align:center'><strong>Vitals</strong></td></tr>
-	<tr><td>Heart Rate:<br><input type='text' name='nhr'></td><td>Respiration Rate:<br><input type='text' name='nrr'></td></tr>
-	<tr><td>Blood Pressure:<br><input type='text' name='nbp'></td><td>SpO<sub>2</sub>:<br><input type='text' name='noo'></td></tr>
+	<tr><td>Heart Rate:<br><input type='text' name='HR' value='0'></td><td>Respiration Rate:<br><input type='text' name='RR' value='0'></td></tr>
+	<tr><td>Blood Pressure:<br><input type='text' name='Bp' value='0'></td><td>SpO<sub>2</sub>:<br><input type='text' name='Spo'  value='0'></td></tr>
 
 
 	<tr><td colspan="2"><input type='submit' name='newnote' value='Chart'></td></tr>
@@ -324,7 +292,8 @@ if(isset($_POST["drugid"])) {
   <div>
 	<h2>Patient Care Notes:</h2>
 	<?php 
-	printnotes();
+	//printnotes();
+	select_notes();
 	?>
 	</div>
   </div>

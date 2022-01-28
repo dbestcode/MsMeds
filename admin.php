@@ -145,7 +145,7 @@ or Select table to alter
 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
   <p>Select Table:</p>
  <?php
-$tables = array("patients", "users", "drugs", "patient_files");
+$tables = array("patients", "users", "drugs", "patient_files","nurse_notes");
 
 foreach ($tables as $value) {
 //  echo "$value <br>";

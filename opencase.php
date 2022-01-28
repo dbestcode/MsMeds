@@ -4,15 +4,15 @@ if(isset($_POST['submit']))
 {
 	include ('conn.php');
 	$sql = "DELETE FROM drug_admins WHERE PatientID=" . $_POST["patient"];
-	echo $_POST["patient"] . "<br>";
-	echo $sql . "<br>";
+	$result = $conn->query($sql);
+	$sql = "DELETE FROM nurse_notes WHERE PatientID=" . $_POST["patient"];
 	$result = $conn->query($sql);
 	echo $result;
-$myfile = fopen("txt/" . $_POST["patient"] . ".nur", "w") or die("Unable to open file!");
+/*$myfile = fopen("txt/" . $_POST["patient"] . ".nur", "w") or die("Unable to open file!");
 $txt = "";
 fwrite($myfile, $txt);
 fclose($myfile);
-
+*/
 	header("Location: patient.php");
 }
 session_start();
