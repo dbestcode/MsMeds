@@ -176,7 +176,13 @@ input[type=button], input[type=submit], input[type=reset] {
   color: white;
 }
 
-
+.center-col{
+  grid-column:2/4;
+}
+.four-col-grid {
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+}
 .three-col-grid {
   display:grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -185,7 +191,6 @@ input[type=button], input[type=submit], input[type=reset] {
   display:grid;
   grid-template-columns: 1fr 1fr;
 }
-
 .vhcenter{
 	margin:0;
 	position:absolute;

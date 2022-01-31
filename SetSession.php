@@ -65,11 +65,9 @@ if(isset($_POST["PatientBarcode"])) {
 		$sql = "SELECT * FROM `drug_admins` WHERE PatientID=" . $_SESSION["PatientID"];
 		$result = $conn->query($sql);
 		if ($result->num_rows > 0) {
-			echo "THIS PATIENT HAS AN OPEN SESSION.  DO YOU WISH TO JOIN?";
 			  header("Location: opencase.php");
-
 	 	}
-		  header("Location: patient.php");
+		header("Location: patient.php");
 	} else {
 		echo "0 results";
 	}
