@@ -13,7 +13,7 @@ if(isset($_SESSION['AuthPass'])){
 	        echo "<a href='admin.php' class='abutton'>Adminitration Portal</a>";
 	        break;
 	}
-	echo "<a href='index.php' class='abutton'>Patient</a>";
+	echo "<a href='index.php' class='abutton'>Open Patient</a>";
 	echo "<a href='logout.php' class='abutton'>Logout</a>";
 }
 

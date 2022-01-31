@@ -69,6 +69,7 @@ if(isset($_POST["PatientBarcode"])) {
 			  header("Location: opencase.php");
 
 	 	}
+		  header("Location: patient.php");
 	} else {
 		echo "0 results";
 	}
