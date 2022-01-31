@@ -54,5 +54,6 @@ require_once('./php/head.php');
 	</div></div>
 <!--<div style='position:absolute;bottom:0;width:100%'>-->
 <?php include './php/footer.php';?>
+-main
 </body>
 </html>
