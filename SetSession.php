@@ -61,11 +61,14 @@ if(isset($_POST["PatientBarcode"])) {
 			$_SESSION["ReportFile"] = $row["ReportFile"];
 			$_SESSION["HpFile"] = $row["HpFile"];
 		}
-		// checking for currnet records
+		// checking for currnet records, if found send to opencase for option to delete
 		$sql = "SELECT * FROM `drug_admins` WHERE PatientID=" . $_SESSION["PatientID"];
-		$result = $conn->query($sql);
-		if ($result->num_rows > 0) {
-			  header("Location: opencase.php");
+		$resultone = $conn->query($sql);
+		$sql = "SELECT * FROM `nurse_notes` WHERE PatientID=" . $_SESSION["PatientID"];
+		$resulttwo = $conn->query($sql);
+		if (($resultone->num_rows > 0)||($resulttwo->num_rows > 0)) {
+			header("Location: opencase.php");
+			exit;
 	 	}
 		header("Location: patient.php");
 	} else {
