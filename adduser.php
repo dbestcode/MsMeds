@@ -83,7 +83,7 @@ if(isset($_GET["barcode"])){
 <?php require "./php/title.php" ?>
 <div class='container' style="height:500px">
 	<div class='vhcenter'>
-		<form method="GET" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+		<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
 		<H2>Register New User</H2>
 		<table>
 		<form method='post' action=/additem.php>
