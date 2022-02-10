@@ -75,7 +75,7 @@ function print_form(){
 		echo "<form method='post' action='". htmlspecialchars($_SERVER['PHP_SELF']) . "'>";
 		echo "<H2>New User Authrization Code:</H2>";
 		echo "Please enter your authorization code:<table>";
-		echo "<tr><td colspan='2'><input type='password' name='authcode' value='SuperSim' autofocus><br></td></tr>";
+		echo "<tr><td colspan='2'><input type='password' name='authcode' value='' autofocus><br></td></tr>";
 		echo "<input type='hidden' name='barcode' value='" . $_GET['barcode'] . "'><br></td></tr>";
 		echo "<tr>";
 		echo "<td><a href='index.php' style='background-color: #20285b;border: none; color: white; padding: 16px 32px; text-decoration: none;  margin: 4px 2px; cursor: pointer;'>Cancel</a></td>";
