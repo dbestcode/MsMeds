@@ -17,7 +17,7 @@ if(isset($_POST['submit'])){
 	$feilds="";
 	$values="";
  	foreach($_POST as $x =>$x_value){
-		echo $i . ": " .$x . "=>" .  $x_value . "<br>";
+//		echo $i . ": " .$x . "=>" .  $x_value . "<br>";
                 if($i==0){
 			$sql=$sql . $x_value;
 		} elseif($i==1){
@@ -39,8 +39,8 @@ if(isset($_POST['submit'])){
 		$i++;
 
         }
-/*	$sql= $sql . " (" . $feilds . ") VALUES (" . $values . ")";
-	echo "<br>" . $sql;
+	$sql= $sql . " (" . $feilds . ") VALUES (" . $values . ")";
+/*	echo "<br>" . $sql;
 	echo "<br>";
 	echo "Feilds:" . $feilds;
 	echo "<br>";
@@ -49,9 +49,15 @@ if(isset($_POST['submit'])){
 */
 	include ('conn.php');
 	$result = $conn->query($sql);
-	echo $result;
+//	echo $result;
 	$conn->close();
-	header("Location: logout.php");
+	if ($result == 1){
+		echo "<p>You have been added.  Returning to login screen...";
+	} else {
+		echo "<p>Something went wrong...  Returning to login screen...";
+	}
+	echo "<meta http-equiv='refresh' content='2;url=index.php'>";
+	exit;
 }
 /*
 if(isset($_GET["barcode"])){
@@ -69,7 +75,7 @@ function print_form(){
 		echo "<form method='post' action='". htmlspecialchars($_SERVER['PHP_SELF']) . "'>";
 		echo "<H2>New User Authrization Code:</H2>";
 		echo "Please enter your authorization code:<table>";
-		echo "<tr><td colspan='2'><input type='text' name='authcode' value='SuperSim'><br></td></tr>";
+		echo "<tr><td colspan='2'><input type='password' name='authcode' value='SuperSim' autofocus><br></td></tr>";
 		echo "<input type='hidden' name='barcode' value='" . $_GET['barcode'] . "'><br></td></tr>";
 		echo "<tr>";
 		echo "<td><a href='index.php' style='background-color: #20285b;border: none; color: white; padding: 16px 32px; text-decoration: none;  margin: 4px 2px; cursor: pointer;'>Cancel</a></td>";
@@ -86,7 +92,7 @@ function print_form(){
 		echo "<tr><td>FirstName</td><td><input type='text' name='FirstName' autofocus><br></td></tr>";
 		echo "<tr><td>LastName</td><td><input type='text' name='LastName'><br></td></tr>";
 		echo "<tr><td>Barcode</td><td><input type='text' readonly='true' name='Barcode' value='" . $_POST['barcode'] . "'><br></td></tr>";
-		echo "<tr><td>Pin</td><td><input type='text' name='Pin'><br></td></tr>";
+		echo "<tr><td>Pin</td><td><input type='password' name='Pin'><br></td></tr>";
 		echo "<tr><td>AccessLevel</td><td><input type='text' readonly='true' name='AccessLevel' value='1'><br></td></tr>";
 		echo "<tr>";
 		echo "<td><a href='index.php' style='background-color: #20285b;border: none; color: white; padding: 16px 32px; text-decoration: none;  margin: 4px 2px; cursor: pointer;'>Cancel</a></td>";
