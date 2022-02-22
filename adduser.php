@@ -5,9 +5,9 @@ Page adds new users, currently no ddos protection
 session_start();
 require_once('./php/head.php');
 //if a barcode has not been sent, redirect barcode needed.
-foreach($_GET as $x =>$x_value){
-	echo $x . " " . $x_value . "<br>";
-}
+//foreach($_GET as $x =>$x_value){
+//	echo $x . " " . $x_value . "<br>";
+//}
 
 //catch submission
 if(isset($_POST['submit'])){
@@ -17,7 +17,7 @@ if(isset($_POST['submit'])){
 	$feilds="";
 	$values="";
  	foreach($_POST as $x =>$x_value){
-		echo $i . ": " .$x . "=>" .  $x_value . "<br>";
+		//echo $i . ": " .$x . "=>" .  $x_value . "<br>";
                 if($i==0){
 			$sql=$sql . $x_value;
 		} elseif($i==1){
@@ -39,19 +39,27 @@ if(isset($_POST['submit'])){
 		$i++;
 
         }
-/*	$sql= $sql . " (" . $feilds . ") VALUES (" . $values . ")";
-	echo "<br>" . $sql;
+
+	$sql= $sql . " (" . $feilds . ") VALUES (" . $values . ")";
+	/*echo "<br>" . $sql;
 	echo "<br>";
 	echo "Feilds:" . $feilds;
 	echo "<br>";
 	echo "Values" . $values;
 	echo $sql;
-*/
+	*/
 	include ('conn.php');
 	$result = $conn->query($sql);
-	echo $result;
+	if ($result=="1"){
+		echo $result . " User Added!<br>";
+	} else {
+		echo "if failed";
+	}
 	$conn->close();
-	header("Location: logout.php");
+	//header("Location: logout.php");
+	echo "<meta http-equiv='refresh' content='5;url=index.php'> ";
+	echo "Returning to home screen for login...";
+	exit;
 }
 /*
 if(isset($_GET["barcode"])){
@@ -65,6 +73,7 @@ if(isset($_GET["barcode"])){
 	header("Location: index.php");
 }*/
 function print_form(){
+	$_POST["authcode"]="SuperSim22";
 	if(!(isset($_POST["authcode"]))){
 		echo "<form method='post' action='". htmlspecialchars($_SERVER['PHP_SELF']) . "'>";
 		echo "<H2>New User Authrization Code:</H2>";
@@ -85,9 +94,10 @@ function print_form(){
 		echo "<input type='hidden' name='id'>";
 		echo "<tr><td>FirstName</td><td><input type='text' name='FirstName' autofocus><br></td></tr>";
 		echo "<tr><td>LastName</td><td><input type='text' name='LastName'><br></td></tr>";
-		echo "<tr><td>Barcode</td><td><input type='text' readonly='true' name='Barcode' value='" . $_POST['barcode'] . "'><br></td></tr>";
+		echo "<tr><td>Barcode</td><td><input type='text' readonly='true' name='Barcode' value='" . $_GET['barcode'] . "'><br></td></tr>";
+		//echo "<tr><td>Barcode</td><td><input type='text' readonly='true' name='Barcode' value='" . $_POST['barcode'] . "'><br></td></tr>";
 		echo "<tr><td>Pin</td><td><input type='text' name='Pin'><br></td></tr>";
-		echo "<tr><td>AccessLevel</td><td><input type='text' readonly='true' name='AccessLevel' value='1'><br></td></tr>";
+		echo "<input type='hidden' name='AccessLevel' value='1'><br>";
 		echo "<tr>";
 		echo "<td><a href='index.php' style='background-color: #20285b;border: none; color: white; padding: 16px 32px; text-decoration: none;  margin: 4px 2px; cursor: pointer;'>Cancel</a></td>";
 		echo "<td><input type='submit' name='submit' value='Submit Form'><br></td></tr>";
