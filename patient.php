@@ -152,6 +152,7 @@ if(isset($_POST["drugid"])) {
           while($row = $result->fetch_assoc()) {
                 $medication=$row;
           }
+	  $_POST["admintime"] =$_POST["admintime"] . " - " . date("m/d/y");
           $sql = "INSERT INTO drug_admins (DrugID, DrugName, PatientID, UserID, UserInitals, AdminTime)" .
                 " VALUES ('" . $medication["id"] . "', '" . $medication["DrugName"] . "', '" . $_SESSION["PatientID"] . "', '" . $_SESSION["UserID"] . "', '" .
                  $_SESSION["uFirstName"] . "', '" . $_POST["admintime"] . "')";
@@ -221,6 +222,26 @@ require('php/head.php');
 	 to {opacity:1 ;}
 	}
 </style>
+<script>
+function validateMedAdmin() {
+	const x = document.forms["adminmed"]["admintime"].value;
+	const id = document.forms["adminmed"]["drugid"].value;
+	if (x == "") {
+		alert("Enter a 'Sim' time");
+		return false;
+	}
+	const rights = ["Patient", "Medication", "Dose", "Time", "Route", "Documentation"];
+
+	let txt = "";
+	for (let x in rights) {
+		if (confirm("Do you have the right " +rights[x] + "?")) {
+		} else {
+			alert("Med Error prevented!");
+			return false;
+		}
+	}
+}
+</script>
 </head>
 
 <body>
@@ -250,19 +271,20 @@ require('php/head.php');
 		</div>
 		<div>
 			<h2>Medications Given</h2>
-			<form name='input' action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>' method='post'>
+			<form name='adminmed' action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>' onsubmit='return validateMedAdmin()' method='post'>
 			<table class='nnote'>
+			<tr><td>"Sim" Time:</td><td><input type='text' name='admintime' ></td></tr>
 			<tr><td>Scan Medication:<br></td><td><input type='text' name='drugid' autofocus>
-<?php 
-if(isset($_POST["drugid"])) {
-	if($_POST["drugid"]=="0") {
-		echo "<span style='color:red;font-weight:bold;'>DRUG NOT FOUND</span>";
-	}
-}
-?></td></tr>
-			<tr><td>"Sim" Time:</td><td><input type='text' name='admintime' value="<?php echo date("m/d/y") . " :????";?>"></td></tr>
-			<tr><td colspan="2"><input type='submit' value="Administer"></td></tr>
+			<?php 
+			if(isset($_POST["drugid"])) {
+				if($_POST["drugid"]=="0") {
+					echo "<span style='color:red;font-weight:bold;'>DRUG NOT FOUND</span>";
+				}
+			}
+			?></td></tr>
+			<!-- <tr><td colspan="2"><input type='submit' value="Administer"></td></tr> -->
 			</table>
+			<input type="submit" style="display: none" />
 			</form>
 			<?php print_drug_admin();?>
 		</div>

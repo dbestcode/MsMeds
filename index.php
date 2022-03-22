@@ -3,11 +3,13 @@ function CheckSession(){
 /*called middle of page
 Produces content based on current login status
 e.x. UserID verified, patient located, Access level etc...*/
+	echo "<img style='border:5px outset #dddddd;padding:10px;' src='img/logo.png' width='200'>";
 	if (isset($_SESSION["UserID"]) && isset($_SESSION["AuthPass"])) {
 		echo "<br><h2>Welcome " . $_SESSION["uFirstName"] . "!</h2>";
 		echo ("<p>Please scan or type the Patient ID or MAR");
-		echo ("<br><form name='input' action='SetSession.php' method='post'><input type='text' name='PatientBarcode' autofocus></form></p>");
-		/*switch($_SESSION["AccessLevel"]){
+		echo ("<br><form name='input' action='SetSession.php' method='post'>");
+		echo ("<input type='text' name='PatientBarcode' autofocus></form></p>");
+	/*switch($_SESSION["AccessLevel"]){
 		    case 3:
 			header("Location: admin.php");
 		        break;
@@ -28,7 +30,7 @@ e.x. UserID verified, patient located, Access level etc...*/
 	} else {
 		echo ("<p>Please scan your ID now.</p>");
 		//barcode is ACCTULLY the barcode for the login NOT the UserID from the database
-		echo ("<br><form name='input' action='SetSession.php' method='post'><input type='text' name='barcode' autofocus></form>");
+		echo ("<br><form name='input' action='SetSession.php' onsubmit='return validateForm()' method='post'><input type='text' name='barcode' autofocus></form>");
 	}
 }
 
@@ -44,6 +46,16 @@ require_once('./php/head.php');
 <!DOCTYPE html>
 <html>
 <head>
+<script>
+function validateForm() {
+  let x = document.forms["input"]["barcode"].value;
+  if (x == "") {
+    alert("Please Scan a Valid Barcode");
+    return false;
+  }
+}
+</script>
+
 <?php
   print_head("default");
 ?>

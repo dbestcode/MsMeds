@@ -3,11 +3,22 @@
 Page adds new users, currently no ddos protection
 */
 session_start();
-require_once('./php/head.php');
+// Check vailidity of the barcode
 //if a barcode has not been sent, redirect barcode needed.
-//foreach($_GET as $x =>$x_value){
-//	echo $x . " " . $x_value . "<br>";
-//}
+if(isset($_GET["barcode"])){
+  if (strpos($_GET["barcode"], "edId") == 1) { //vaildidate that the barcode starts with MedId
+    echo "";
+    //$_SESSION["ncode"] = $_GET["barcode"];
+  } else {
+    echo "<meta http-equiv='refresh' content='1;url=index.php'>";
+    echo "<h1>Invaild Barcode ID</h1>";
+    exit ();
+  }
+} else {
+  header("Location: index.php");
+}
+
+require_once('./php/head.php');
 
 //catch submission
 if(isset($_POST['submit'])){
@@ -22,7 +33,7 @@ if(isset($_POST['submit'])){
 		} elseif($i==1){
 			$feilds = $feilds . "id, ";
 			$values = $values . "NULL, ";
-		} elseif ($i==count($_POST)-3){
+		} elseif ($i==count($_POST)-4){
 			$feilds = $feilds . $x . ", ";
                 					//PIN, storing the hash not the pin
 			$values = $values . "'" . hash('md5',$x_value) . "', ";
@@ -58,17 +69,7 @@ if(isset($_POST['submit'])){
 	echo "<meta http-equiv='refresh' content='2;url=index.php'>";
 	exit;
 }
-/*
-if(isset($_GET["barcode"])){
-	if (strpos($_GET["barcode"], "edId") == 1) {//vaildidate that the barcode starts with MedId
-		$_SESSION["ncode"] = $_GET["barcode"];
-	} else {
-		//echo "invaild Barcode ID";
-		//header("Location: index.php");
-	}
-} else {
-	header("Location: index.php");
-}*/
+
 function print_form(){
 	$_POST["authcode"]="SuperSim22";
 	if(!(isset($_POST["authcode"]))){
@@ -91,9 +92,9 @@ function print_form(){
 		echo "<input type='hidden' name='id'>";
 		echo "<tr><td>FirstName</td><td><input type='text' name='FirstName' autofocus><br></td></tr>";
 		echo "<tr><td>LastName</td><td><input type='text' name='LastName'><br></td></tr>";
-		echo "<tr><td>Barcode</td><td><input type='text' readonly='true' name='Barcode' value='" . $_POST['barcode'] . "'><br></td></tr>";
 		echo "<tr><td>Pin</td><td><input type='password' name='Pin'><br></td></tr>";
-		echo "<tr><td>AccessLevel</td><td><input type='text' readonly='true' name='AccessLevel' value='1'><br></td></tr>";
+		echo "<tr><td></td><td><input type='hidden' readonly='true' name='Barcode' value='" . $_GET['barcode'] . "'><br></td></tr>";
+		echo "<tr><td></td><td><input type='hidden' readonly='true' name='AccessLevel' value='1'><br></td></tr>";
 		echo "<tr>";
 		echo "<td><a href='index.php' style='background-color: #20285b;border: none; color: white; padding: 16px 32px; text-decoration: none;  margin: 4px 2px; cursor: pointer;'>Cancel</a></td>";
 		echo "<td><input type='submit' name='submit' value='Submit Form'><br></td></tr>";
@@ -122,4 +123,5 @@ function print_form(){
 <?php require './php/footer.php';?>
 </body>
 </html>
+
 

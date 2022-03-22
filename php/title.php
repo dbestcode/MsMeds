@@ -6,11 +6,11 @@ if(isset($_SESSION['AuthPass'])){
 	echo "Hello " . $_SESSION["uFirstName"] . "!<br>";
 	switch($_SESSION["AccessLevel"]){
 	    case 2:
-	        echo "<a href='drugs.php' class='abutton'>Medication Administrations</a>";
+	        echo "<a href='drugs.php' class='abutton'>Student Activity</a>";
 	        break;
 	    case 3:
-	        echo "<a href='drugs.php' class='abutton'>Medication Administrations</a>";
-	        echo "<a href='admin.php' class='abutton'>Adminitration Portal</a>";
+	        echo "<a href='drugs.php' class='abutton'>Student Activity</a>";
+	        echo "<a href='admin.php' class='abutton'>Admin Portal</a>";
 	        break;
 	}
 	echo "<a href='index.php' class='abutton'>Open Patient</a>";

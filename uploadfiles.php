@@ -10,7 +10,7 @@ if(isset($_POST['submit']))
 	if($_POST["doctype"]=="other"){
 		include ('conn.php');
 		$sql = "INSERT INTO patient_files (id,PatientID,Label,FileName) VALUES (NULL, '" . 
-			$_POST["patients"] . "', '" . $_POST["doclabel"] ."', '" .  
+			$_POST["patientid"] . "', '" . $_POST["doclabel"] ."', '" .  
 			basename($_FILES["fileToUpload"]["name"]) . "')";
 		$result = $conn->query($sql);
 		echo $result . "<br>";
@@ -32,7 +32,11 @@ if(isset($_POST['submit']))
 		}
 		include ('conn.php');
 		$sql = "UPDATE patients SET ". $feild . " = '" . basename($_FILES["fileToUpload"]["name"]) .
-			"' WHERE id = " . $_POST["patients"];
+			"' WHERE id = " . $_POST["patientid"];
+		//foreach ($_POST as $key=>$val){
+		//	echo $key." ".$val."<br/>";
+		//}
+		//echo $sql;exit();
 		$result = $conn->query($sql);
 		echo $result . "<br>";
 		$conn->close();
@@ -73,6 +77,20 @@ if(isset($_POST['submit']))
 <html>
 <head>
 <?php print_head("default"); ?>
+
+<script>
+//returns the ID of the patient selected and chaneges the input box to reflect ID.
+function showHint(str) {
+  const xhttp = new XMLHttpRequest();
+  xhttp.onload = function() {
+    document.getElementById("patientid").value =
+    this.responseText;
+  }
+  xhttp.open("GET", "getid.php?q="+str);
+  xhttp.send();
+}
+</script>
+
 </head>
 
 <body>
@@ -87,18 +105,17 @@ if(isset($_POST['submit']))
 		<table class="nnote">
 		<tr><td>File</td><td><input type="file" name="fileToUpload" id="fileToUpload"></td></tr>
 		<tr><td>Patient</td><td>
-		
 <?php
 //----------------------------------------------
 include ('conn.php');
-$sql = "SELECT * FROM patients";
+$sql = "SELECT * FROM patients ORDER by `patients`.`LastName`";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
   //$i=0;
-echo "<input list='patients' name='patients'>";
-		echo "<datalist id='patients'>";
+  echo "<input list='patientn' name='patientna' onkeyup='showHint(this.value)'>";
+  echo "<datalist id='patientn'>";
   while($row = $result->fetch_assoc()) {
-	echo "<option value='" . $row["id"] . "'>\n";
+	echo "<option value='" . $row["LastName"] . "-" . $row["FirstName"] . "'>\n";
 	$namelist[$i]=$row;
 	$i++;
   }
@@ -109,13 +126,14 @@ echo "<input list='patients' name='patients'>";
   exit;
 }
 $conn->close();
-echo "<br>Patient ID List<span style='font-size:10px'>";
+/*echo "<br>Patient ID List<span style='font-size:10px'>";
 for($i = 0; $i < count($namelist); $i++) {
 	echo "<br>" . $namelist[$i]['id'] . ": " . $namelist[$i]['FirstName']. " " . $namelist[$i]['LastName'];
-}
+}*/
 echo "</span>";
 //----------------------------------------------
 ?>
+		<input type='hidden' readonly=true name='patientid' id='patientid' value=''>
 		<br></td></tr>
 		<tr><td>Type</td><td>
 		<input type='radio' id="mar" name='doctype' value='mar' checked="checked">
@@ -127,8 +145,8 @@ echo "</span>";
 		<input type='radio' id="report" name='doctype' value='report'>
 		<label for="report">Shift Report</label><br>
 		<input type='radio' id="other" name='doctype' value='other'>
-		<label for="other">Other:</label><input type="test" name="doclabel"><br>
-		
+		<label for="other">Other:</label><input type="text" name="doclabel"><br>
+
 		<br></td></tr>
 		<tr><td><input type="submit" value="Upload File" name="submit"></td><td><a href='admin.php' style='
 		  background-color: #20285b;
