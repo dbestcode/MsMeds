@@ -252,7 +252,8 @@ require('php/head.php');
 			<h2>Medications Given</h2>
 			<form name='input' action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>' method='post'>
 			<table class='nnote'>
-			<tr><td>Scan Medication:<br></td><td><input type='text' name='drugid' autofocus>
+			<tr><td>"Sim" Time:</td><td><input type='text' name='admintime' value="<?php echo date("m/d/y") . " :????";?>" autofocus ></td></tr>
+			<tr><td>Scan Medication:<br></td><td><input type='text' name='drugid'>
 <?php 
 if(isset($_POST["drugid"])) {
 	if($_POST["drugid"]=="0") {
@@ -260,7 +261,6 @@ if(isset($_POST["drugid"])) {
 	}
 }
 ?></td></tr>
-			<tr><td>"Sim" Time:</td><td><input type='text' name='admintime' value="<?php echo date("m/d/y") . " :????";?>"></td></tr>
 			<tr><td colspan="2"><input type='submit' value="Administer"></td></tr>
 			</table>
 			</form>

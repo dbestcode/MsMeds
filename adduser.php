@@ -91,7 +91,7 @@ function print_form(){
 		echo "<input type='hidden' name='id'>";
 		echo "<tr><td>FirstName</td><td><input type='text' name='FirstName' autofocus><br></td></tr>";
 		echo "<tr><td>LastName</td><td><input type='text' name='LastName'><br></td></tr>";
-		echo "<tr><td>Barcode</td><td><input type='text' readonly='true' name='Barcode' value='" . $_POST['barcode'] . "'><br></td></tr>";
+		echo "<tr><td>Barcode</td><td><input type='text' readonly='true' name='Barcode' value='" . $_GET['barcode'] . "'><br></td></tr>";
 		echo "<tr><td>Pin</td><td><input type='password' name='Pin'><br></td></tr>";
 		echo "<tr><td>AccessLevel</td><td><input type='text' readonly='true' name='AccessLevel' value='1'><br></td></tr>";
 		echo "<tr>";
