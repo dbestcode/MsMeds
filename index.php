@@ -5,8 +5,7 @@ Produces content based on current login status
 e.x. UserID verified, patient located, Access level etc...*/
 	echo "<img style='border:5px outset #dddddd;padding:10px;' src='img/logo.png' width='200'>";
 	if (isset($_SESSION["UserID"]) && isset($_SESSION["AuthPass"])) {
-		echo "<br><h2>Welcome " . $_SESSION["uFirstName"] . "!</h2>";
-		echo ("<p>Please scan or type the Patient ID or MAR");
+		echo ("<p><h3>Please scan the Patient ID band<br/> or enter the MRN</h3>");
 		echo ("<br><form name='input' action='SetSession.php' method='post'>");
 		echo ("<input type='text' name='PatientBarcode' autofocus></form></p>");
 	/*switch($_SESSION["AccessLevel"]){
@@ -24,9 +23,10 @@ e.x. UserID verified, patient located, Access level etc...*/
 			echo ("<br><form name='input' action='SetSession.php' method='post'><input type='text' name='PatientBarcode' autofocus></form></p>");
 		}*/
 	} elseif (isset($_SESSION["UserID"])) {
+		echo "<br><h2>Welcome " . $_SESSION["uFirstName"] . "!</h2>";
 		echo ("<p>Enter your PIN");
 		echo ("<br><form name='input' action='SetSession.php' method='post'><input type='password' name='apin' autofocus></form></p>");
-		echo ("or <a href='logout.php'>cancel</a>");
+		echo ("or <a href='logout.php'>return to login</a>");
 	} else {
 		echo ("<p>Please scan your ID now.</p>");
 		//barcode is ACCTULLY the barcode for the login NOT the UserID from the database

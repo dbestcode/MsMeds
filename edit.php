@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('draw.php');
+require_once('./php/draw.php');
 
 if(isset($_POST['submit']))
 {
@@ -30,7 +30,7 @@ if(isset($_POST['submit']))
 	header("Location: displaytable.php");
 	exit;
 }
-include "cherry.php";
+include "php/cherry.php";
 require "php/head.php";
 ?>
 <!DOCTYPE html>

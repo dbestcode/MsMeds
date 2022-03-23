@@ -19,7 +19,7 @@ if(isset($_GET["barcode"])){
 }
 
 require_once('./php/head.php');
-
+require_once('./php/draw.php');
 //catch submission
 if(isset($_POST['submit'])){
 	//$name = $_POST['id'];
@@ -84,8 +84,10 @@ function print_form(){
 		echo "</table>";
 		echo "</form>";
 	} else if ($_POST["authcode"]=="SuperSim22"){
-		echo "<form method='post' action='". htmlspecialchars($_SERVER['PHP_SELF']) . "'>";
+		echo "<form name='newuser' method='post' action='". htmlspecialchars($_SERVER['PHP_SELF']) . "' onsubmit='return validateNewUser()'>";
 		echo "<H2>Register New User</H2>";
+		echo "<p>A pin recomeneded but is not required.  If you use no pin your data and your patient's<br/>" .
+			 "data will NOT be secure.  You should alway take security precautions using patient data.</p>";
 		echo "<table>";
 		echo "<form method='post' action=/additem.php>";
 		echo "<input type='hidden' name=table value=users>";
@@ -111,6 +113,25 @@ function print_form(){
 <html lang="en">
 <head>
 <?php print_head("default"); ?>
+
+<script>
+//fuction to make user enter first and last name
+function validateNewUser() {
+	//grab data from from boxes
+	const fn = document.forms["newuser"]["FirstName"].value;
+	const ln = document.forms["newuser"]["LastName"].value;
+	//const pin = document.forms["newuser"]["Pin"].value;  //can be added
+	//verfity they are not empty
+	if (fn == "") {
+		alert("Enter a first name");
+		return false;
+	}else if (ln == "") {
+		alert("Enter a last name");
+		return false;
+	}
+}
+</script>
+
 </head>
 
 <body>

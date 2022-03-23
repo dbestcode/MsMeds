@@ -12,7 +12,7 @@ if(isset($_POST['deleteitem'])) {
 	header("Location: delete.php");
 }
 
-require_once('draw.php');
+require_once('php/draw.php');
 require_once( "php/head.php");
 ?>
 <!DOCTYPE html>

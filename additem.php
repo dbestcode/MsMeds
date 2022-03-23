@@ -6,7 +6,7 @@ currently in the table.  */
 
 session_start();
 //for pretty table code
-require_once('draw.php');
+require_once('./php/draw.php');
 //vailidate admin status
 require ("php/cherry.php");
 require ("php/head.php");
