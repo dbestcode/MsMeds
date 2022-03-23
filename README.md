@@ -50,5 +50,31 @@ sudo apt install net-tools apache2 mysql-server php libapache2-mod-php php-mysql
 	* libapache2-mod-php
 	* php-mysql
 
-* Setup mysql user acount for administration and one for the app to make use of.
 
+#### mysql
+* Setup mysql user acount for administration and one for the app to make use of.
+* sudo_meds is the sample database that needs imported to make the application have sql data to work with
+* tables:
+	* drugs
+	* patients
+	* users
+	* patient_files
+	* drugs_admins
+	* nurse_notes
+
+
+## Administration
+
+The 'Admin Portal' gives access to upload patient files and edit the data tables.
+
+There are 4 directly editable data tables.
+
+1. Patients  
+	Contains patients and their information
+2. Users  
+	Contains all users.  Pins are not stored but hashes of them are.  Access levels are 1 for student,   
+	2 for faculty who can view all actity, and 3 for Administration
+3. Drugs  
+	All medications
+4. Patient_Files  
+	Non standard files, such as diagnotics tests, extened patient hisotry office visit summary, etc...

@@ -95,6 +95,7 @@ function print_form(){
 		echo "<tr><td>FirstName</td><td><input type='text' name='FirstName' autofocus><br></td></tr>";
 		echo "<tr><td>LastName</td><td><input type='text' name='LastName'><br></td></tr>";
 		echo "<tr><td>Pin</td><td><input type='password' name='Pin'><br></td></tr>";
+		echo "<tr><td>Pin(Again)</td><td><input type='password' name='dPin'><br></td></tr>";
 		echo "<tr><td></td><td><input type='hidden' readonly='true' name='Barcode' value='" . $_GET['barcode'] . "'><br></td></tr>";
 		echo "<tr><td></td><td><input type='hidden' readonly='true' name='AccessLevel' value='1'><br></td></tr>";
 		echo "<tr>";
@@ -120,13 +121,17 @@ function validateNewUser() {
 	//grab data from from boxes
 	const fn = document.forms["newuser"]["FirstName"].value;
 	const ln = document.forms["newuser"]["LastName"].value;
-	//const pin = document.forms["newuser"]["Pin"].value;  //can be added
-	//verfity they are not empty
+	const pin = document.forms["newuser"]["Pin"].value;
+	const dpin = document.forms["newuser"]["dPin"].value;
+	//verfity name feilds are not empty and pin matches IF set
 	if (fn == "") {
 		alert("Enter a first name");
 		return false;
 	}else if (ln == "") {
 		alert("Enter a last name");
+		return false;
+	}else if (pin !== dpin) {
+		alert("Pins do not match...");
 		return false;
 	}
 }
