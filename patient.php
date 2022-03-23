@@ -209,6 +209,7 @@ require('php/head.php');
 	}
 </style>
 <script>
+
 function validateMedAdmin() {
 	const x = document.forms["adminmed"]["admintime"].value;
 	const id = document.forms["adminmed"]["drugid"].value;
@@ -220,14 +221,15 @@ function validateMedAdmin() {
 
 	let txt = "";
 	for (let x in rights) {
-		if (confirm("Do you have the right " +rights[x] + "?")) {
-		} else {
-			alert("Med Error prevented!");
-			return false;
-		}
+		txt += rights[x] + "?\n";
 	}
-}
-</script>
+	if (confirm("Do you have the right \n" +txt )) {
+		alert("Proceed with Medication Administration");
+	} else {
+		alert("Administration Canceled...");
+		return false;
+	}
+}</script>
 </head>
 
 <body>
@@ -259,7 +261,7 @@ function validateMedAdmin() {
 			<h2>Medications Given</h2>
 			<form name='adminmed' action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>' onsubmit='return validateMedAdmin()' method='post'>
 			<table class='nnote'>
-			<tr><td>"Sim" Time:</td><td><input type='text' name='admintime' ></td></tr>
+			<tr><td>'Sim' Time:(e.x. 1415)</td><td><input type='text' name='admintime' ></td></tr>
 			<tr><td>Scan Medication:<br></td><td><input type='text' name='drugid' autofocus>
 			<?php 
 			if(isset($_POST["drugid"])) {
@@ -299,6 +301,7 @@ function validateMedAdmin() {
 </div>
 
 <div id="home" class="tabcontent">
+
 	<h1 style="text-align: center;"><strong>Overview</strong></h1> 
 	<p><strong>Shift Report:</strong></p> 
 	<p>This is the report from the off going clinician.&nbsp; 
@@ -314,6 +317,11 @@ function validateMedAdmin() {
 	<p>Contains Medication Orders and record of all medication given before and during you simulation.</p> 
 	<p><strong>Care Notes:</strong></p> 
 	<p>A place to chart note on your patient&rsquo;s care, status and vitals.</p></td>
+	<pre>
+	<?php
+	echo readfile("HELP.md");
+	?>
+	</pre>
 </div>
 <div id="mdorders" class="tabcontent">
 	<?php

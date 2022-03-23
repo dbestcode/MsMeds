@@ -29,10 +29,10 @@ require_once('php/head.php');
 		<div id="content" style='text-align:center;'>
 		<?php
 		if (isset($_SESSION["PatientID"])) {
-			echo "<h2>Simulation in progress</h2> <br><h3>" . 
-				$_SESSION["pFirstName"] . " " . $_SESSION["pLastName"] . ", DOB " . $_SESSION["pDOB"] . " ";
+			echo "<h2>Simulation in progress</h2> <br><h3>'" . 
+				$_SESSION["pFirstName"] . " " . $_SESSION["pLastName"] . "' "; //. $_SESSION["pDOB"] . " ";
 		}
-		?>has an open case currently.  </h3>
+		?> has a session open.  </h3>
 
 		<a href='patient.php' style='
 		  background-color: #20285b;
@@ -41,12 +41,12 @@ require_once('php/head.php');
 		  padding: 16px 16px;
 		  text-decoration: none;
 		  text-align:center;
-		  width: 150px;'>Continue?</a>
+		  width: 150px;'>Continue Case?</a>
 		<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
 		   <input type="hidden" name="patient" value="<?php echo htmlspecialchars($_SESSION['PatientID']) ?>"><br>
-		   <input type="submit" name="submit" value="Restart Case?"><br>
+		   <input type="submit" name="submit" value="Start New Case?"><br>
 		</form>
-		<strong>NOTE: 'Restart Case' will clear all progress.</strong><br>
+		<br/><strong>NOTE: 'Start New Case' will clear all progress.</strong><br>
 		</div>
 
 	</div>
