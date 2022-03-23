@@ -37,7 +37,7 @@ function print_drug_admin(){
 		echo "<tr>";
 		echo "<th>Time given</th>";
 		echo "<th>Drug</th>";
-		echo "<th>Nurse</th>";
+		echo "<th>Clinician</th>";
 		echo "</tr>\n";
 		while($row = $result->fetch_assoc()) {
 			echo "<tr>";
@@ -53,7 +53,7 @@ function print_drug_admin(){
 		echo "<tr>";
 		echo "<th>Time given</th>";
 		echo "<th>Drug</th>";
-		echo "<th>Nurse</th>";
+		echo "<th>Clinician</th>";
 		echo "</tr>\n<tr>";
 		echo tablecell("---") . tablecell("No medications have been administered yet."). tablecell("---");
 		echo "</tr>\n";
@@ -322,7 +322,7 @@ function validateMedAdmin() {
 </div>
 
 <div id="home" class="tabcontent">
-<h1 style="text-align: center;"><strong>Overview</strong></h1> <p><strong>Shift Report:</strong></p> <p>This is the report from the off going nurse.&nbsp; It contains a short overview of the patient and their last assessment.</p> <p><strong>H &amp; P (History and Physical):</strong></p> <p>Patient's medical, family, social histories.</p> <p><strong>Orders:</strong></p> <p>This section includes Patient demographics, Active Orders and Provider orders. &nbsp;Includes identifying information such as name, date of birth and other information.</p> <p><strong>Other Documents:</strong></p> <p>Contains any other information in patient chart such as labs, radiology reports, cardiographics and anything else.</p> <p><strong>Medications:</strong></p> <p>Contains Medication Orders and record of all medication given before and during you simulation.</p> <p><strong>Care Notes:</strong></p> <p>A place to chart note on your patient&rsquo;s care, status and vitals.</p></td>
+<h1 style="text-align: center;"><strong>Overview</strong></h1> <p><strong>Shift Report:</strong></p> <p>This is the report from the off going clinician.&nbsp; It contains a short overview of the patient and their last assessment.</p> <p><strong>H &amp; P (History and Physical):</strong></p> <p>Patient's medical, family, social histories.</p> <p><strong>Orders:</strong></p> <p>This section includes Patient demographics, Active Orders and Provider orders. &nbsp;Includes identifying information such as name, date of birth and other information.</p> <p><strong>Other Documents:</strong></p> <p>Contains any other information in patient chart such as labs, radiology reports, cardiographics and anything else.</p> <p><strong>Medications:</strong></p> <p>Contains Medication Orders and record of all medication given before and during you simulation.</p> <p><strong>Care Notes:</strong></p> <p>A place to chart note on your patient&rsquo;s care, status and vitals.</p></td>
 
 </div>
 <div id="mdorders" class="tabcontent">

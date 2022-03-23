@@ -52,23 +52,3 @@ sudo apt install net-tools apache2 mysql-server php libapache2-mod-php php-mysql
 
 * Setup mysql user acount for administration and one for the app to make use of.
 
-## Basic Operation
-#### First user setup
-1. Open a web browser and type in the address of the server
-2. Scan/type your id badge
-3. Enter your First and last name, and add a security pin(*Can be any length or left blank*)
-4. After data entery you are rediected back to login page
-
-#### Opening a patient
-1. Scan/type your ID badge
-	Enter your pin
-2. Scan the patients ID band.
-3. Patient Idenfiers are visable across top of screen
-4. Click on any tab to open content
-	* 
-	* 
-#### Adding Drugs and Supplies
-
-#### New Patients
-#### 
-
