@@ -30,7 +30,7 @@ function print_drug_admin(){
 	// Create connection
 	include "conn.php";
  	//--load drug_admins from database into array 'medorders'
-	$sql = "SELECT * FROM drug_admins WHERE drug_admins.PatientID=" . $_SESSION["PatientID"];
+	$sql = "SELECT * FROM drug_admins WHERE drug_admins.PatientID=" . $_SESSION["PatientID"] . " ORDER BY drug_admins.RealTime DESC";
 	$result = $conn->query($sql);
 	//makes table of all files found prints a row for each record
 	if ($result->num_rows > 0) {
@@ -208,6 +208,7 @@ require('php/head.php');
 	 to {opacity:1 ;}
 	}
 </style>
+
 <script>
 
 function validateMedAdmin() {
@@ -229,7 +230,23 @@ function validateMedAdmin() {
 		alert("Administration Canceled...");
 		return false;
 	}
-}</script>
+}
+function parseMarkdown(markdownText) {
+	const htmlText = markdownText
+		.replace(/^### (.*$)/gim, '<h3>$1</h3>')
+		.replace(/^## (.*$)/gim, '<h2>$1</h2>')
+		.replace(/^# (.*$)/gim, '<h1>$1</h1>')
+		.replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>')
+		.replace(/\*\*(.*)\*\*/gim, '<b>$1</b>')
+		.replace(/\*(.*)\*/gim, '<i>$1</i>')
+		.replace(/!\[(.*?)\]\((.*?)\)/gim, "<img alt='$1' src='$2' />")
+		.replace(/\[(.*?)\]\((.*?)\)/gim, "<a href='$2'>$1</a>")
+		.replace(/\n$/gim, '<br />')
+
+	return htmlText.trim()
+}
+
+</script>
 </head>
 
 <body>
@@ -245,9 +262,9 @@ function validateMedAdmin() {
 	<button class="tablinks" onclick="openTab(event, 'report')">Shift Report</button>
 	<button class="tablinks" onclick="openTab(event, 'hp')">H & P</button>
 	<button class="tablinks" onclick="openTab(event, 'mdorders')">Orders</button>
-	<button class="tablinks" onclick="openTab(event, 'DHistory')"> Other Docs(Labs, Rad, etc...)</button>
+	<button class="tablinks" onclick="openTab(event, 'DHistory')"> Diagnostics(Labs, Rad, etc..)</button>
 	<button class="tablinks" onclick="openTab(event, 'emar')" id="dbutton">Medications</button>
-	<button class="tablinks" onclick="openTab(event, 'nursenote')" id="nbutton">Care Notes</button>
+	<button class="tablinks" onclick="openTab(event, 'nursenote')" id="nbutton">Care Notes</button>	
 </div>
 <div id="emar" class="tabcontent">
   	<div class="two-col-grid">
@@ -318,10 +335,27 @@ function validateMedAdmin() {
 	<p><strong>Care Notes:</strong></p> 
 	<p>A place to chart note on your patient&rsquo;s care, status and vitals.</p></td>
 	<pre>
+
+
 	<?php
-	echo readfile("HELP.md");
+//	echo readfile("HELP.md");
 	?>
 	</pre>
+	<script>
+		let file = 'HELP.md';
+		let reader = new FileReader();
+		reader.onload = (e) => {
+		        const file = e.target.result;
+		        const lines = file.split(/\r\n|\n/);
+       			for(var line = 0; line < lines.length-1; line++){
+				console.log(line + " --> "+ lines[line]);
+			}
+
+		        textarea.value = lines.join('\n');
+		};
+
+		reader.readAsText(file);
+  	</script>
 </div>
 <div id="mdorders" class="tabcontent">
 	<?php

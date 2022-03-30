@@ -70,7 +70,11 @@ if(isset($_POST["PatientBarcode"])) {
 			header("Location: opencase.php");
 			exit;
 	 	}
-		header("Location: patient.php");
+		if ($_SESSION["AccessLevel"] == 7){
+			header("Location: oper.php");
+		} else{
+			header("Location: patient.php");
+		}
 	} else {
 		echo "0 results";
 	}

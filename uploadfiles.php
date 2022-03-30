@@ -69,7 +69,7 @@ if(isset($_POST['submit']))
 	        echo "Sorry, there was an error uploading your file.";
 	    }
 	}
-	echo "<a href='admin.php'>admin menu</a> or <a href='javascript:history.back()'>upload more?</a>";
+	echo "<a href='admin.php'>admin menu</a> or <a href='uploadfiles.php'>upload more?</a>";
 	exit();
 }
 ?>
