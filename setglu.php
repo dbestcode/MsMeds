@@ -72,7 +72,7 @@ if ($result->num_rows > 0) {
   echo "</datalist>";
 
 } else {
-  echo "0 results";
+  echo "0";
   exit;
 }
 $conn->close();
@@ -86,7 +86,21 @@ echo "</span>";
 		<input type='hidden' readonly=true name='patientid' id='patientid' value=''><p id='qrlink'></p>
 		<br></td></tr>
 		<tr><td>Glucose</td><td>
-		<input type="text" name="glucose"><br>
+		<input type="text" name="glucose" value="100
+<?php 
+/*include ('conn.php');
+$sql = "SELECT `PatientID`,`Glucose` FROM `patient_vitals` WHERE PatientID=4";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+  while($row = $result->fetch_assoc()) {
+	echo $row["Glucose"];
+  }
+} else {
+  exit;
+}
+$conn->close();*/
+?>
+		"><br>
 
 		<br></td></tr>
 		<tr><td><input type="submit" value="Update" name="submit"></td><td><a href='admin.php' style='
@@ -98,12 +112,10 @@ echo "</span>";
 		  margin: 4px 2px;
 		  cursor: pointer;
 		  width: 150px;
-		  
 		'>Cancel</a></td></tr>
 		<br>
 
 		</TABLE>
-			
 		</form>
 		</div>
 		<p id='qrform'></p>

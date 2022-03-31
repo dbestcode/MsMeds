@@ -2,14 +2,6 @@
 require('./php/cherry.php');
 require_once('./php/head.php');
 
-/*if(isset($_POST['submit']))
-{
-	$_SESSION['activetable']=$_POST['ast'];
-	header("Location: displaytable.php");
-        foreach($_POST as $x =>$x_value){
-		echo "<br>" .$x . " " . $x_value;
-	}
-}*/
 if(isset($_POST['ast'])) {
 	$_SESSION['activetable']=$_POST['ast'];
 	echo $_POST[ast];
@@ -21,26 +13,6 @@ if(isset($_POST['ast'])) {
 } else {
 	unset($_SESSION['activetable']);
 }
-
-
-/*
-if(isset($_POST['patients'])) {
-	$_SESSION['activetable']="patients";
-	header("Location: displaytable.php");
-}
-if(isset($_POST['drugs'])) {
-	$_SESSION['activetable']="drugs";
-	header("Location: displaytable.php");
-}
-if(isset($_POST['users'])) {
-	$_SESSION['activetable']="users";
-	header("Location: displaytable.php");
-}
-if(isset($_POST['patient_files'])) {
-	$_SESSION['activetable']="patient_files";
-	header("Location: displaytable.php");
-}
-*/
 
 ?>
 
@@ -147,9 +119,12 @@ li.dropdown {
 <p style="text-align:left">
 <?php
     $tables = array("patients", "users", "drugs", "patient_files");
+    $tablelabels = array("Patients", "System Users", "Medications", "Supplemental Patient Files");
+    $i=0;
     foreach ($tables as $value) {
         echo "<input type='radio' id='a$value' name='ast' value='$value'>";
-        echo "<label for='a$value'>" . ucwords($value) . "</label><br>";
+        echo "<label for='a$value'>" . $tablelabels[$i] . "</label><br />";
+        $i++;
     }
 ?>
 </p>

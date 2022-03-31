@@ -33,7 +33,23 @@ include "conn.php";
 $unsafe_variable =  $_REQUEST["q"];
 $safe_variable = mysqli_real_escape_string($conn,$unsafe_variable);
 //open record with barcode scanned
-$sql = "SELECT `id`,`PatientID`,`Glucose` FROM `patient_vitals` WHERE `PatientID` =" . $safe_variable;
+//$sql = "SELECT `id`,`PatientID`,`Glucose` FROM `patient_vitals` WHERE `PatientID` =" . $safe_variable;
+$sql = "SELECT\n"
+
+    . "    `patient_vitals`.`Glucose`,\n"
+
+    . "    `patient_vitals`.`PatientID`,\n"
+
+    . "    patients.LastName,\n"
+
+    . "    patients.FirstName\n"
+
+    . "FROM\n"
+
+    . "    `patient_vitals`\n"
+
+    . "INNER JOIN patients ON patients.id = patient_vitals.PatientID WHERE `PatientID` =" . $safe_variable;
+
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
 	// output data of each row
@@ -41,6 +57,7 @@ if ($result->num_rows > 0) {
 		$patients[$i] = $row;
 		$i++;
 		echo $row["Glucose"];
+		$patientname = substr($row["FirstName"],0,1) . ". ". $row["LastName"];
 	}
 } else {
 	echo "0 results";
@@ -48,7 +65,8 @@ if ($result->num_rows > 0) {
 }
 $conn->close();
 ?></span>mg/dL<br/><br/><br/>
-<?php echo date("m/d/y h:m");?>
+<?php echo date("m/d/y h:m");
+echo "<br />" . $patientname; ?>
 </div>
 </body>
 </html>
