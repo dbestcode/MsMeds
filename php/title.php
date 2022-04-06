@@ -19,13 +19,13 @@ if(isset($_SESSION['AuthPass'])){
 	    case 4:
 	    //DEV VIEW
 	        echo "<a href='drugs.php' class='abutton'>Student Activity</a>";
-	        echo "<a href='oper.php' class='abutton'>Surgical Portal</a>";
+	        echo "<a href='ioreport.php' class='abutton'>Surgical Portal</a>";
 	        echo "<a href='setglu.php' class='abutton'>Set Glucose</a>";
 	        echo "<a href='admin.php' class='abutton'>Admin Portal</a>";
 	        break;
 	    case 7:
 	    //SURG Tech
-	        echo "<a href='oper.php' class='abutton'>Surgical Portal</a>";
+	        echo "<a href='ioreport.php' class='abutton'>Surgical Portal</a>";
 	        break;
 	}
 	echo "<a href='index.php' class='abutton'>Open Patient</a>";

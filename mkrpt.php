@@ -2,7 +2,7 @@
 session_start();
 //included for some html drawing help
 require_once('php/draw.php');
-
+/*
 //prints all patient files 
 function print_files(){
 	include "conn.php";
@@ -148,7 +148,7 @@ if(isset($_POST["admdrugid"])) {
 	}
         $conn->close();
 }
-
+*/
 //catch if a report has been submitted
 if(isset($_POST["Patient_Last_Name"])) {
 	$sql = "INSERT INTO `or_report` (`id`, ";
@@ -248,7 +248,7 @@ require('php/head.php');
 </style>
 
 <script>
-
+/*
 function validateMedAdmin() {
 	const x = document.forms["adminmed"]["admintime"].value;
 	const id = document.forms["adminmed"]["drugid"].value;
@@ -268,7 +268,7 @@ function validateMedAdmin() {
 		alert("Administration Canceled...");
 		return false;
 	}
-}
+}*/
 </script>
 </head>
 
@@ -280,9 +280,10 @@ function validateMedAdmin() {
 		"</pre></div>";
 	?>
 </div>
+<!--
 <div class="tab">
-<input type=button onClick=window.open("mkrpt.php","demo","width=800,height=600,left=100,top=100,toolbar=0,status=0,"); value="Create Operative Report">
-	<button class="tablinks" onclick="openTab(event, 'emar')" id="defaultOpen">Medications</button>
+	<button class="tablinks" onclick="openTab(event, 'opreport')" id="defaultOpen">Create Operative Report</button>
+	<button class="tablinks" onclick="openTab(event, 'emar')" id="dbutton">Medications</button>
 	<button class="tablinks" onclick="openTab(event, 'report')"> Shift Report</button>
 	<button class="tablinks" onclick="openTab(event, 'hp')">History  & Physical</button>
 	<button class="tablinks" onclick="openTab(event, 'mdorders')">Providers Orders</button>
@@ -311,11 +312,10 @@ function validateMedAdmin() {
 				}
 			}
 			?></td></tr>
-			<!-- <tr><td colspan="2"><input type='submit' value="Administer"></td></tr> -->
 			</table>
 			<input type="submit" style="display: none" />
 			</form>
-			<?php print_drug_admin();?>
+			<?php //print_drug_admin();?>
 		</div>
 	</div>
 </div>
@@ -326,7 +326,7 @@ function validateMedAdmin() {
 			<table class='nnote'>
 			<form method='post' action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">  
 			<tr><td>"Sim" Time:</td><td><input type='text' name='DateTime' value="<?php echo date("m/d/y") . " :";?>"></td></tr>
-			<tr><td colspan="2">Note:<br /> <textarea name='Note' rows='10' cols='60'><?php printdefaultnote("txt/default-note.txt"); ?></textarea></td><tr>
+			<tr><td colspan="2">Note:<br /> <textarea name='Note' rows='10' cols='60'><?php //printdefaultnote("txt/default-note.txt"); ?></textarea></td><tr>
 			<tr><td colspan="2" style='text-align:center'><strong>Vitals</strong></td></tr>
 			<tr><td>Heart Rate:<br><input type='text' name='HR' value='0'></td><td>Respiration Rate:<br><input type='text' name='RR' value='0'></td></tr>
 			<tr><td>Blood Pressure:<br /><input type='text' name='Bp' value='0'></td><td>SpO<sub>2</sub>:<br /><input type='text' name='Spo'  value='0'></td></tr>
@@ -336,7 +336,7 @@ function validateMedAdmin() {
 		</div>
 		<div>
 			<h2>Patient Care Notes:</h2>
-			<?php select_notes();?>
+			<?php //select_notes();?>
 		</div>
 	</div>
 </div>
@@ -359,7 +359,7 @@ function validateMedAdmin() {
 	?>
 </div>
 <div id="DHistory" class="tabcontent">
-	<?php print_files(); ?>
+	<?php //print_files(); ?>
 </div>
 
 <div id="consents" class="tabcontent">
@@ -508,7 +508,7 @@ Print Name: ________________________________________________
 </div>
 
 <div id="opreport" class="tabcontent">
-<!--					OP REPORT FORM								-->
+					OP REPORT FORM								-->
 <div>
   <h2 style='text-align:center;''>SURGERY INTRAOPERATIVE REPORT</h2>
 <form name='orreport' action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>' method='post'>
@@ -687,16 +687,16 @@ Print Name: ________________________________________________
 <script>
 	<?php
 	//changes default page if user has just administered a drug or added a note
-
+/*
 	if(isset($_POST['newnote'])) {
 	  echo "document.getElementById('nbutton').click();";
 	} elseif(isset($_POST["drugid"])) {
 	  echo "document.getElementById('dbutton').click();";
 	} else {
 	  echo "document.getElementById('defaultOpen').click();";
-	}
+	}*/
 	?>
-
+/*
 	function openTab(evt, tabName) {
 		var i, tabcontent, tablinks;
 		tabcontent = document.getElementsByClassName("tabcontent");
@@ -709,7 +709,7 @@ Print Name: ________________________________________________
 		}
 		document.getElementById(tabName).style.display = "block";
 		evt.currentTarget.className += " active";
-	}
+	}*/
 </script>
 </div>
 <?php require 'php/footer.php';?>

@@ -1,4 +1,5 @@
 <?php
+session_start();
 //require('php/patientaccess.php');
 if(isset($_POST['submit']))
 {
@@ -13,7 +14,12 @@ $txt = "";
 fwrite($myfile, $txt);
 fclose($myfile);
 */
-	header("Location: patient.php");
+	if ($_SESSION["AccessLevel"] == 7){
+		header("Location: oper.php");
+		exit();
+	} else {
+		header("Location: patient.php");
+	}
 }
 session_start();
 require_once('php/head.php');
@@ -34,7 +40,15 @@ require_once('php/head.php');
 		}
 		?> has a session open.  </h3>
 
-		<a href='patient.php' style='
+		<a href='
+		<?php
+			if ($_SESSION["AccessLevel"] == 7){
+				echo "oper.php";
+			} else {
+				echo "patient.php";
+			}
+		?>
+		' style='
 		  background-color: #20285b;
 		  display:inline-block;
 		  color: white;

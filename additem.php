@@ -14,7 +14,7 @@ require ("php/head.php");
 //catch the submission of the new data
 if(isset($_POST['submit']))
 {
-	$sql="INSERT INTO ";
+	$sql="INSERT INTO " . $_SESSION["activetable"];
 	$i=0;
 	$feilds="";
 	$values="";
@@ -36,15 +36,18 @@ if(isset($_POST['submit']))
 		$i++;
         }
 	$sql= $sql . " (" . $feilds . ") VALUES (" . $values . ")";
-	echo "<br>" . $sql;
+	/*echo "<br>" . $sql;
 	echo "<br>";
 	echo "Feilds:" . $feilds;
 	echo "<br>";
-	echo "Values" . $values;
+	echo "Values" . $values;*/
 	include ('conn.php');
 	$result = $conn->query($sql);
+	if ($result == 1) {
+		echo "Item Added!";
+	}
+	echo "<br />" . $result;
 	$conn->close();
-	echo "<br><a href='admin.php'>Return to Admin Menu</a>";
 	exit;
 }
 ?>

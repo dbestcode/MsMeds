@@ -118,8 +118,8 @@ li.dropdown {
 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
 <p style="text-align:left">
 <?php
-    $tables = array("patients", "users", "drugs", "patient_files");
-    $tablelabels = array("Patients", "System Users", "Medications", "Supplemental Patient Files");
+    $tables = array("patients", "users", "drugs", "patient_files","or_report");
+    $tablelabels = array("Patients", "System Users", "Medications", "Supplemental Patient Files","IO reports");
     $i=0;
     foreach ($tables as $value) {
         echo "<input type='radio' id='a$value' name='ast' value='$value'>";

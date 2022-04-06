@@ -14,7 +14,7 @@ if(isset($_POST['deleteitem'])) {
 }
 
 require_once('php/draw.php');
-require_once( "php/head.php");
+require_once('php/head.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,11 +30,11 @@ require('conn.php');
 if ($_SESSION["activetable"]=='patients') {
 	$sql = "SELECT * FROM `patients` ORDER BY `patients`.`LastName` ASC";
 }else if ($_SESSION["activetable"]=='users') {
-$sql = "SELECT * FROM `users`  \n" . "ORDER BY `users`.`LastName` ASC, `users`.`FirstName` ASC";
+	$sql = "SELECT * FROM `users`  \n" . "ORDER BY `users`.`LastName` ASC, `users`.`FirstName` ASC";
 }else if ($_SESSION["activetable"]=='drugs') {
 	$sql = "SELECT * FROM `drugs` ORDER BY `drugs`.`DrugName` ASC";
 } else if ($_SESSION["activetable"]=='patient_files') {
-$sql = "SELECT * FROM `patient_files` ORDER BY `patient_files`.`FileName` ASC, `patient_files`.`Label`  DESC";
+	$sql = "SELECT * FROM `patient_files` ORDER BY `patient_files`.`FileName` ASC, `patient_files`.`Label`  DESC";
 } else {
 	$sql = "SELECT * FROM ". $_SESSION["activetable"];
 }
