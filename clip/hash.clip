@@ -1,1 +1,0 @@
-(hash('md5',$_POST["apin"]) == $_SESSION["uPin"])

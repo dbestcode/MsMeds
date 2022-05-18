@@ -158,6 +158,41 @@ require('php/head.php');
 <?php print_head("patient");?>
 	<style>
 	body {font-family: Arial;}
+.wrapper {
+  display: grid;
+  grid-template-rows: auto auto auto;
+}
+
+.nav-content {
+  display: grid;
+  grid-template-columns: 200px auto
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0px;
+  background-color: #f1f1f1;
+  overflow: auto; /* Enable scrolling if the sidenav has too much content */
+}
+
+li a {
+  display: block;
+  color: #000;
+  padding: 3px 3px;
+  text-decoration: none;
+}
+
+li a.active {
+  background-color: #20285b;
+  color: white;
+}
+
+li a:hover:not(.active) {
+  background-color: #555;
+  color: white;
+}
+
 	/* Style the tab */
 	.tab {
 	  overflow: hidden;
@@ -250,6 +285,7 @@ function parseMarkdown(markdownText) {
 </head>
 
 <body>
+<div class='wrapper'>
 <?php include "php/title.php";?>
 <div style="text-align:center">
 	<?php echo "<div><pre><strong>Patient:</strong> " .	$_SESSION["pFirstName"] . " " .	$_SESSION["pLastName"] . 
@@ -257,14 +293,44 @@ function parseMarkdown(markdownText) {
 		"</pre></div>";
 	?>
 </div>
+<div class="nav-content">
 <div class="tab">
-	<button class="tablinks" onclick="openTab(event, 'home')" id="defaultOpen">Home</button>
-	<button class="tablinks" onclick="openTab(event, 'report')">Shift Report</button>
-	<button class="tablinks" onclick="openTab(event, 'hp')">H & P</button>
-	<button class="tablinks" onclick="openTab(event, 'mdorders')">Orders</button>
-	<button class="tablinks" onclick="openTab(event, 'DHistory')"> Diagnostics(Labs, Rad, etc..)</button>
-	<button class="tablinks" onclick="openTab(event, 'emar')" id="dbutton">Medications</button>
-	<button class="tablinks" onclick="openTab(event, 'nursenote')" id="nbutton">Care Notes</button>	
+	<ul>
+	<li><a class="tablinks" onclick="openTab(event, 'home')" id="defaultOpen">Home</a></li>
+	<li><a class="tablinks" onclick="openTab(event, 'report')">Shift Report</a></li>
+	<li><a class="tablinks" onclick="openTab(event, 'hp')">H & P</a></li>
+	<li><a class="tablinks" onclick="openTab(event, 'mdorders')">Orders</a></li>
+	<li><a class="tablinks" onclick="openTab(event, 'DHistory')"> Diagnostics</a></li>
+	<li><a class="tablinks" onclick="openTab(event, 'emar')">Medications</a></li>
+	<li><a class="tablinks" onclick="openTab(event, 'nursenote')" id="nbutton">Care Notes</a></li>
+	<hr />
+	<li><a href='Demographics'>Demographics</a></li>
+	<li><a href='History'>History</a></li>
+	<li><a href='MedRec'>Med Rec</a></li>
+	<li><a href='VitalSigns'>Vital Signs</a></li>
+	<li><a href='InO'>Intake and Output</a></li>
+	<li><a href='ADL'>ADL's</a></li>
+	<li><a href='Lab Values'>Lab Values</a></li>
+	<li><a href='Radiology'>Radiology</a></li>
+	<li><a href='Cardiology'>Cardiology</a></li>
+	<li><a href='Consults'>Consults</a></li>
+	<li><a href='Nursing Notes'>Nursing Notes</a></li>
+	<li><a href='MAR '>MAR </a></li>
+	<li><a href='Neurological'>Neurological</a></li>
+	<li><a href='Cardiovascular'>Cardiovascular</a></li>
+	<li><a href='Respiratory'>Respiratory</a></li>
+	<li><a href='GI'>GI System</a></li>
+	<li><a href='GU'>GU System</a></li>
+	<li><a href='Musculoskeletal'>Musculoskeletal</a></li>
+	<li><a href='WoundsnDrains'>Wounds and Drains</a></li>
+	<li><a href='IV'>IV's and Lines</a></li>
+	<li><a href='Psychosocial '>Psychosocial </a></li>
+	<li><a href='FallRiskAssessment'>Fall Risk Assessment</a></li>
+	<li><a href='BradenScale'>Braden Scale</a></li>
+	<li><a href='Orders'>Orders</a></li>
+	<li><a href='PlanofCare'>Plan of Care</a></li>
+
+	</ul>
 </div>
 <div id="emar" class="tabcontent">
   	<div class="two-col-grid">
@@ -276,6 +342,7 @@ function parseMarkdown(markdownText) {
 		</div>
 		<div>
 			<h2>Medications Given</h2>
+			<span style="color:red;">Enter time of administration, then click in the medication box and scan you medication</span>
 			<form name='adminmed' action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>' onsubmit='return validateMedAdmin()' method='post'>
 			<table class='nnote'>
 			<tr><td>'Sim' Time:(e.x. 1415)</td><td><input type='text' name='admintime' ></td></tr>
@@ -337,25 +404,6 @@ function parseMarkdown(markdownText) {
 	<pre>
 
 
-	<?php
-//	echo readfile("HELP.md");
-	?>
-	</pre>
-	<script>
-		let file = 'HELP.md';
-		let reader = new FileReader();
-		reader.onload = (e) => {
-		        const file = e.target.result;
-		        const lines = file.split(/\r\n|\n/);
-       			for(var line = 0; line < lines.length-1; line++){
-				console.log(line + " --> "+ lines[line]);
-			}
-
-		        textarea.value = lines.join('\n');
-		};
-
-		reader.readAsText(file);
-  	</script>
 </div>
 <div id="mdorders" class="tabcontent">
 	<?php
@@ -407,6 +455,7 @@ function openTab(evt, tabName) {
 </script>
 </div>
 <?php require 'php/footer.php';?>
+</div>
 </div>
 </body>
 </html>

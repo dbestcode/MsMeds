@@ -625,8 +625,12 @@ Print Name: ________________________________________________
         Leg strap:<input name='LegStrap' type='checkbox' value='1' /><br />
         Pillows:<input name='Pillows' type='checkbox' value='1' /><br />
         Shoulder roll:<input name='ShoulderRoll' type='checkbox' value='1' /><br />
-        Stirrups:<input name='Stirrups' type='checkbox' value='1' /><br />
-        Other:<input name='Other_Postional' type='checkbox' value='1' /><br />
+        Stirrups:<input name='Stirrups' type='checkbox' value='1' /><br /><br />
+        Supplies Used:<br />
+      </fieldset>
+      <fieldset id='Supplies'>
+        <legend>Surgical Supplies:</legend>
+        <textarea name='Other_Postional' cols="50" rows="5">Scan items and type description</textarea><br />
       </fieldset>
 
       <fieldset id='SCD'>

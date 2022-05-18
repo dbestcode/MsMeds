@@ -27,12 +27,12 @@ if(isset($_POST['submit'])){
 		$i++;
         }
 	$sql=$sql . "WHERE id=" . $id;
-	echo $sql;
-	//include ('conn.php');
-	//$result = $conn->query($sql);
-	//$conn->close();
-	//unset($_SESSION["edititem"]);
-//	header("Location: displaytable.php");
+	//echo $sql;
+	include ('conn.php');
+	$result = $conn->query($sql);
+	$conn->close();
+	unset($_SESSION["edititem"]);
+	header("Location: ioreport.php");
 	exit;
 }
 //-----------------------------------------------------end submit edit page
@@ -93,6 +93,9 @@ if(isset($_POST["edititem"])){
 			}
 			if ($x == "id"){
 				echo "<input type='hidden' name='" . $x . "' value='" . $x_value . "'>\n";
+			} elseif ($x == "Other_Postional") {
+				echo "Surgical Supplies:<br /><textarea name='" . $x . "'cols='30' rows='5'>" . $x_value . "</textarea><br />";
+//				echo $x . ":<input type='text' name='" . $x . "' value='" . $x_value . "'>I<br>\n";
 			} else {
 				echo $x . ":<input type='text' name='" . $x . "' value='" . $x_value . "'><br>\n";
 			}
@@ -202,6 +205,7 @@ if(isset($_POST['deleteitem'])) {
 	$_SESSION['deleteitem']=$_POST['deleteitem'];
 	header("Location: delete.php");
 }
+
 echo  "  <link rel='stylesheet' type='text/css' href='css/grid.css'/>\n";
 echo "</head><body>";
 require("php/title.php");

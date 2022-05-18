@@ -1,5 +1,5 @@
 # Ms. Meds
-
+---
 #### Overview
 Ms.Meds is a web based applcation is designed for students in healthcare setting to simulate using an EHR and EMR.  It can allow students to admiter medications,
 
@@ -16,7 +16,7 @@ some technical know how to setup the system, but it is very simple so any partic
 sets to maintain it are fairly simple, though it can be customized if you are brave.
 
 ## Hardware Requirments
-
+---
 * Linux Server PC
 * Client COWs(Computers on wheels)
 	* Any computer/tablet that will run a modern web browser should work.
@@ -27,7 +27,7 @@ sets to maintain it are fairly simple, though it can be customized if you are br
 	* User ID badges
 
 ## Installation and setup
-
+---
 It is runs on a LAMP(Linux, Apache, MySql, PHP) server.
 
 [Tutorial](https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu-20-04)
@@ -52,6 +52,7 @@ sudo apt install net-tools apache2 mysql-server php libapache2-mod-php php-mysql
 
 
 #### mysql
+---
 * Setup mysql user acount for administration and one for the app to make use of.
 * sudo_meds is the sample database that needs imported to make the application have sql data to work with
 * tables:
@@ -64,7 +65,7 @@ sudo apt install net-tools apache2 mysql-server php libapache2-mod-php php-mysql
 
 
 ## Administration
-
+---
 The 'Admin Portal' gives access to upload patient files and edit the data tables.
 
 There are 4 directly editable data tables.
@@ -78,3 +79,48 @@ There are 4 directly editable data tables.
 	All medications
 4. Patient_Files  
 	Non standard files, such as diagnotics tests, extened patient hisotry office visit summary, etc...
+
+### File List
+* additem.php
+	* Generic form, adds item to table chosen by session varables
+* adduser.php
+	* Form to add basic users to system, barcode **MUST** begin with 'MedId'
+* adminconn.php
+	* _Unused_
+* admin.php
+	* Administration portal page
+* conn.php
+	* Edit this to hold the UN and PW to the database
+* delete.php
+	* Prompts before deltion for a record of any kind
+* displaytable.php
+	* Generic display table, chosen by session varables
+* drugs.php
+* edit.php
+* getid.php
+* give-med.php
+* glucometer.php
+* HELP.md
+* home.php
+* index.php
+* ioreport.php
+* logout.php
+* mkrpt.php
+* opencase.php
+* oper.php
+* patient_files
+* patient.php
+* php
+* README.md
+* setglu.php
+* SetSession.php
+* sudo_meds.sql
+* uploadfiles.php
+* validate.js
+
+* archive/
+* txt/
+* css/
+* csv/
+* img/
+

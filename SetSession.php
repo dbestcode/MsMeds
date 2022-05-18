@@ -21,17 +21,16 @@ if(isset($_POST["barcode"])) {
 	if ($result->num_rows > 0) {
 	  // output data of each row
 	  while($row = $result->fetch_assoc()) {
-		$_SESSION["UserID"] = $row["id"];
-		$_SESSION["uFirstName"] = $row["FirstName"];
-		$_SESSION["uLastName"] = $row["LastName"];
-		$_SESSION["AccessLevel"] = $row["AccessLevel"];
-		$_SESSION["uPin"] = $row["Pin"];
-//---  needs chenged and PIN implemented in future
-		//$_SESSION["AuthPass"]=54792390;
-
+	    $_SESSION["UserID"] = $row["id"];
+	    $_SESSION["uFirstName"] = $row["FirstName"];
+	    $_SESSION["uLastName"] = $row["LastName"];
+	    $_SESSION["AccessLevel"] = $row["AccessLevel"];
+	    $_SESSION["uPin"] = $row["Pin"];
+	    //---  needs chenged and PIN implemented in future
+	    //$_SESSION["AuthPass"]=54792390;
 	  }
 	} else {
-	  echo "0 results";
+	  echo "fdsjdfsjkldsf0 results";
 	  header("Location: adduser.php?barcode=" . $_POST["barcode"]);
 	  exit;
 	}
@@ -61,7 +60,21 @@ if(isset($_POST["PatientBarcode"])) {
 			$_SESSION["ReportFile"] = $row["ReportFile"];
 			$_SESSION["HpFile"] = $row["HpFile"];
 		}
-		// checking for currnet records, if found send to opencase for option to delete
+// check for immortal patient where students cannot remove their info once entered
+		$sql = "SELECT `Immortal` FROM `patients` WHERE `id`=" . $_SESSION["PatientID"];
+		$immortal = $conn->query($sql);
+		while($row = $immortal->fetch_assoc()) {
+			if($row['Immortal']=='1'){
+				if ($_SESSION["AccessLevel"] == 7){
+					header("Location: oper.php");
+					exit;
+				} else{
+					header("Location: patient.php");
+					exit;
+				}
+			}
+		}
+		// checking for curnet records, if found send to opencase for option to delete
 		$sql = "SELECT * FROM `drug_admins` WHERE PatientID=" . $_SESSION["PatientID"];
 		$resultone = $conn->query($sql);
 		$sql = "SELECT * FROM `nurse_notes` WHERE PatientID=" . $_SESSION["PatientID"];
