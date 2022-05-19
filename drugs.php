@@ -1,15 +1,16 @@
 <?php 
 session_start();
-if (isset($_SESSION["UserID"]) && isset($_SESSION["AuthPass"]) && ($_SESSION["AccessLevel"]!=1)) {
+/*if (isset($_SESSION["UserID"]) && isset($_SESSION["AuthPass"]) && ($_SESSION["AccessLevel"]!=1)) {
 } else {
 	header("Location: logout.php");
-}
+}*/
 
 ini_set('display_errors', '1');
 error_reporting(E_ALL);
 function tablecell($celldata) {
         return "<td>".$celldata."</td>";
 }
+
 function tablerow($celldata) {
         return "<tr>".$celldata."</tr>";
 }
@@ -22,6 +23,7 @@ require_once('./php/head.php');
 <?php 
         print_head("default");
 ?>
+<meta http-equiv="refresh" content="5" >
 </head>
 <body>
 

@@ -80,47 +80,67 @@ There are 4 directly editable data tables.
 4. Patient_Files  
 	Non standard files, such as diagnotics tests, extened patient hisotry office visit summary, etc...
 
-### File List
+## File List
+### Common Particpant Pages
+* drugs.php
+	* Displays all medications given, used for monitoring participants in real time
+* home.php
+	* next gen patient screen
+* index.php
+	* home page for login
+* ioreport.php
+	* lists all operative reports that have been made
+* oper.php
+	home page for surgical view
+* patient.php
+	* **Main** patient view page
+* glucometer.php
+	* displays glucometer result for a patient
+* mkrpt.php
+	* form to make operative reports
+* opencase.php
+	* page to reset a patient
+
+### General Use on multable pages
+* adminconn.php
+	* _unused_
+* conn.php
+	* Edit this to hold the UN and PW to the database
+* give-med.php
+	* _unused_
+* getid.php
+	* looks up suggesions for patient ID based on patient last name
+* SetSession.php
+	* sets session varibles and redirects to the appraite page
+
+### Administration
 * additem.php
 	* Generic form, adds item to table chosen by session varables
 * adduser.php
 	* Form to add basic users to system, barcode **MUST** begin with 'MedId'
-* adminconn.php
-	* _Unused_
 * admin.php
 	* Administration portal page
-* conn.php
-	* Edit this to hold the UN and PW to the database
 * delete.php
 	* Prompts before deltion for a record of any kind
 * displaytable.php
 	* Generic display table, chosen by session varables
-* drugs.php
 * edit.php
-* getid.php
-* give-med.php
-* glucometer.php
-* HELP.md
-* home.php
-* index.php
-* ioreport.php
+	* Generic edits records in a table, chosen by session varables
 * logout.php
-* mkrpt.php
-* opencase.php
-* oper.php
-* patient_files
-* patient.php
-* php
-* README.md
+	* Clears session and logs out.
 * setglu.php
-* SetSession.php
+	* dialog to set glucometer
 * sudo_meds.sql
+	* contains the setup for the sql tables and some base data
 * uploadfiles.php
-* validate.js
+	* for uploading PDFs of patient documents
 
+### Folders
 * archive/
 * txt/
 * css/
 * csv/
 * img/
+* patient_files/
+* php/
 

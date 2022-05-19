@@ -1,4 +1,5 @@
 <?php
+//used to lookup patient ID from last name
 //require('./php/cherry.php');
 // get the q parameter from URL
 $q = $_REQUEST["q"];

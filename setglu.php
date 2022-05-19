@@ -33,9 +33,9 @@ if(isset($_POST['submit'])) {
 function showHint(str) {
   const xhttp = new XMLHttpRequest();
   xhttp.onload = function() {
-    document.getElementById("patientid").value =
-    this.responseText;
-    const qrdata = "http://10.81.183.51/glucometer.php?q=" + this.responseText;
+    document.getElementById("patientid").value = this.responseText;
+//    const qrdata = "http://10.81.183.51/glucometer.php?q=" + this.responseText;
+    const qrdata = "glucometer.php?q=" + this.responseText;
     document.getElementById("qrlink").innerHTML = "<a href=" + qrdata + ">Link</a>";
 //    document.getElementById("qrform").innerHTML = "<form action='https://api.qr-code-generator.com/v1/create?access-token=652Fp3aBsdijHyXNfh0F2NoUHpjHZpT9PHmGk9KA8AdHwA_wQY2xqCmOtFR9c1bO' method='post'><input type='text' name='qr_code_text' value='" + qrdata + "'><input type='text' name='width' value='200'><input type='submit' value='view' name='submit'></form>";
   }
