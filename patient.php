@@ -258,8 +258,8 @@ function parseMarkdown(markdownText) {
 	?>
 </div>
 <div class="tab">
-	<button class="tablinks" onclick="openTab(event, 'home')" id="defaultOpen">Home</button>
-	<button class="tablinks" onclick="openTab(event, 'report')">Shift Report</button>
+<!--	<button class="tablinks" onclick="openTab(event, 'home')">Home</button>-->
+	<button class="tablinks" onclick="openTab(event, 'report')" id="defaultOpen">Shift Report</button>
 	<button class="tablinks" onclick="openTab(event, 'hp')">H & P</button>
 	<button class="tablinks" onclick="openTab(event, 'mdorders')">Orders</button>
 	<button class="tablinks" onclick="openTab(event, 'DHistory')"> Diagnostics(Labs, Rad, etc..)</button>

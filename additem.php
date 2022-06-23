@@ -1,6 +1,7 @@
 <?php 
 /*
-passing a tbale to it generates a form for adding rows to the table based on the data
+passing a table to this generates a form for adding 
+rows to the table based on the data
 currently in the table.  */
 
 

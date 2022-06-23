@@ -136,7 +136,6 @@ There are 4 directly editable data tables.
 	* for uploading PDFs of patient documents
 
 ### Folders
-* archive/
 * txt/
 * css/
 * csv/
