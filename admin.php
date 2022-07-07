@@ -1,7 +1,10 @@
 <?php 
+// File: admin.php
+// Main menu for administrator for MsMeds
 require('./php/cherry.php');
 require_once('./php/head.php');
 
+/*
 if(isset($_POST['ast'])) {
 	$_SESSION['activetable']=$_POST['ast'];
 	echo $_POST[ast];
@@ -12,7 +15,7 @@ if(isset($_POST['ast'])) {
 	}
 } else {
 	unset($_SESSION['activetable']);
-}
+}*/
 
 ?>
 
@@ -112,41 +115,30 @@ li.dropdown {
 -->
 <div id="content">
 <div id="ccontainer" class='container' style='height:400px;width:800;'>
-<div class='vhcenter' >
 <h1>Administration Portal</h1>
-<h3 style='text-align:center'>System Data</h3>
+<a href='../phpmyadmin'><h4>phpMyAdmin</h4></a>(edit paitents, medications, users, other data...)
+<!---
 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
 <p style="text-align:left">
 <?php
-    $tables = array("patients", "users", "drugs", "patient_files","or_report");
+    /*$tables = array("patients", "users", "drugs", "patient_files","or_report");
     $tablelabels = array("Patients", "System Users", "Medications", "Supplemental Patient Files","IO reports");
     $i=0;
     foreach ($tables as $value) {
         echo "<input type='radio' id='a$value' name='ast' value='$value'>";
         echo "<label for='a$value'>" . $tablelabels[$i] . "</label><br />";
         $i++;
-    }
+    }*/
 ?>
 </p>
 <input type="submit" name="submit" value="View/Edit">
 <input type="submit" name="submit" value="Add New Item">
 </form>
 </p>
+<br>-->
+</br>or
+<a href='uploadfiles.php'><h4>Upload Files/PDFs</h4></a></a>
 <br>
-<h3 style='text-align:center'>Patient files</h3>
-<a href='uploadfiles.php' style='
-                  background-color: #20285b;
-                  display:inline-block;
-                  color: white;
-                  padding: 16px 16px;
-                  text-decoration: none;
-                  text-align:center;
-                  width: 150px;'>Upload Files</a>
-<br></div></div>
-</div>
+</div></div>
 <?php include './php/footer.php';?>
-	</div>
-</div>
-</body>
-
-</html>
+</body></html>

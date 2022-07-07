@@ -3,6 +3,10 @@
 <html>
 <head>
 <?php
+// Set the session varibles based on what is being enterd on the index page
+// handle user name, then password then patient
+// also takes care of if the patient is 'checked out'
+//7.6.22
 session_start();
 require_once('php/head.php');
 print_head('default');
@@ -38,6 +42,7 @@ if(isset($_POST["barcode"])) {
 }
 //check for patient ID
 if(isset($_POST["PatientBarcode"])) {
+	echo "looking for patient...</br>";
 	include "conn.php";
 	$unsafe_variable = $_POST["PatientBarcode"];
 	$safe_variable = mysqli_real_escape_string($conn,$unsafe_variable);
@@ -46,6 +51,7 @@ if(isset($_POST["PatientBarcode"])) {
 	$result = $conn->query($sql);
 	//A patient has been found
 	if ($result->num_rows > 0) {
+		echo "Found...</br>";
 		// output data of each row
 		while($row = $result->fetch_assoc()) {
 			$_SESSION["PatientID"] = $row["id"];
@@ -60,7 +66,7 @@ if(isset($_POST["PatientBarcode"])) {
 			$_SESSION["ReportFile"] = $row["ReportFile"];
 			$_SESSION["HpFile"] = $row["HpFile"];
 		}
-// check for immortal patient where students cannot remove their info once entered
+		// check for immortal patient where students cannot remove their info once entered
 		$sql = "SELECT `Immortal` FROM `patients` WHERE `id`=" . $_SESSION["PatientID"];
 		$immortal = $conn->query($sql);
 		while($row = $immortal->fetch_assoc()) {
@@ -81,11 +87,10 @@ if(isset($_POST["PatientBarcode"])) {
 		$resulttwo = $conn->query($sql);
 		if (($resultone->num_rows > 0)||($resulttwo->num_rows > 0)) {
 			header("Location: opencase.php");
-			exit;
 	 	}
 		if ($_SESSION["AccessLevel"] == 7){
 			header("Location: oper.php");
-		} else{
+		} else {
 			header("Location: patient.php");
 		}
 	} else {
@@ -93,6 +98,7 @@ if(isset($_POST["PatientBarcode"])) {
 	}
 	$conn->close();
 }
+
 if(isset($_SESSION["uPin"]) && isset($_POST["apin"])) {
 // pins are disabled as none are in DB
 	if (hash('md5',$_POST["apin"]) == $_SESSION["uPin"]){
@@ -107,7 +113,14 @@ if(isset($_SESSION["uPin"]) && isset($_POST["apin"])) {
 		unset($_SESSION["uPin"]);
 	} else {
 		echo "<H1>PIN INVALID</H1>";
+		exit;
 	}
+	if ($_SESSION["AccessLevel"] == 3){
+		header("Location: admin.php");
+	} else {
+		header("Location: index.php");
+	}
+
 }
 echo "<br>Redirecting... <a href='index.php'>Click after 5 seconds <a>";
 ?>

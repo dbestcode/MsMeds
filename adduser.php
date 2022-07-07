@@ -3,53 +3,38 @@
 Page adds new users, currently no ddos protection
 */
 session_start();
-// Check vailidity of the barcode
-//if a barcode has not been sent, redirect barcode needed.
-if(isset($_GET["barcode"])){
-  if (strpos($_GET["barcode"], "edId") == 1) { //vaildidate that the barcode starts with MedId
-    echo "";
-    //$_SESSION["ncode"] = $_GET["barcode"];
-  } else {
-    echo "<meta http-equiv='refresh' content='1;url=index.php'>";
-    echo "<h1>Invaild Barcode ID</h1>";
-    exit ();
-  }
-} else {
-  header("Location: index.php");
-}
-
 require_once('./php/head.php');
 require_once('./php/draw.php');
-//catch submission
+// Catch if this is a submission of form on this page to
+// start an account
 if(isset($_POST['submit'])){
-	//$name = $_POST['id'];
-	$sql="INSERT INTO ";
+	$sql="INSERT INTO users";
 	$i=0;
-	$feilds="";
-	$values="";
+	$feilds="id, ";
+	$values="NULL, ";
  	foreach($_POST as $x =>$x_value){
-                if($i==0){
-			$sql=$sql . $x_value;
-		} elseif($i==1){
-			$feilds = $feilds . "id, ";
-			$values = $values . "NULL, ";
-		} elseif ($i==count($_POST)-4){
+                if($i==2){	//fname
+			$feilds = $feilds . $x . ", ";
+			$values = $values . "'" . $x_value . "', ";
+                } elseif($i==3){ //lname
+			$feilds = $feilds . $x . ", ";
+			$values = $values . "'" . $x_value . "', ";
+                } elseif($i==6){ //barcode
+			$feilds = $feilds . $x . ", ";
+			$values = $values . "'" . $x_value . "', ";
+		} elseif ($i==4){
 			$feilds = $feilds . $x . ", ";
                 					//PIN, storing the hash not the pin
 			$values = $values . "'" . hash('md5',$x_value) . "', ";
-		} elseif ($i==count($_POST)-2){
-                	$feilds = $feilds . $x;		//last item, omit comma connting the string
-			$values = $values . "'" . $x_value . "'";
-		} elseif ($i==count($_POST)-1){
-							//sumit value is in the POSt array, ignoring so not added to sql stament
-		} else {
-			$feilds = $feilds . $x . ", ";
-			$values = $values . "'" . $x_value . "', ";
 		}
 		$i++;
 
         }
+	$feilds = $feilds . "AccessLevel";
+	$values = $values . "'1'";
+
 	$sql= $sql . " (" . $feilds . ") VALUES (" . $values . ")";
+//	echo $sql;
 	/*echo "<br>" . $sql;
 	echo "<br>";
 	echo "Feilds:" . $feilds;
@@ -59,7 +44,7 @@ if(isset($_POST['submit'])){
 	*/
 	include ('conn.php');
 	$result = $conn->query($sql);
-//	echo $result;
+	echo $result;
 	$conn->close();
 	if ($result == 1){
 		echo "<p>You have been added.  Returning to login screen...";
@@ -68,6 +53,18 @@ if(isset($_POST['submit'])){
 	}
 	echo "<meta http-equiv='refresh' content='2;url=index.php'>";
 	exit;
+} elseif(isset($_GET["barcode"])){
+// If this an unregisted barcode stat here
+  if (strpos($_GET["barcode"], "edId") == 1) { //vaildidate that the barcode starts with MedId
+    echo "";
+  } else {
+    echo "<meta http-equiv='refresh' content='1;url=index.php'>";
+    echo "<h1>Invaild Barcode ID</h1>";
+    exit ();
+  }
+} else {
+//if a valid barcode has not been sent, redirect barcode needed.
+  header("Location: index.php");
 }
 
 function print_form(){
@@ -149,5 +146,4 @@ function validateNewUser() {
 <?php require './php/footer.php';?>
 </body>
 </html>
-
 
