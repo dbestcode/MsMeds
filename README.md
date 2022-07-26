@@ -1,13 +1,31 @@
 # Ms. Meds
 ---
-#### introduction
-Ms.Meds is a web based application designed for students in healthcare settings to simulate using an EHR and EMAR. It can allow students to view patient information in an electronic format, administer medications, and write care notes.
+### introduction
+Ms.Meds is a web based application designed for students in healthcare 
+settings to simulate using an EHR and EMAR. It can allow students to 
+view patient information in an electronic format, administer 
+medications, and write care notes.
 
-Electronic documentation is an important part of healthcare.  Scanning medications is a difficult part of the process that is often overlooked when funds prevent getting a real medication dispensing system.  Ms. Meds has been developed to be a low cost solution that allows students to make a sim centers med admin use barcodes on medications, patient ID bands, and student IDs to administer meds like they would in the hospital.
+Electronic documentation is an important part of healthcare.  Scanning 
+medications is a difficult part of the process that is often overlooked 
+when funds prevent getting a real medication dispensing system.  Ms. 
+Meds has been developed to be a low cost solution that allows students 
+to make a sim centers med admin use barcodes on medications, patient ID 
+bands, and student IDs to administer meds like they would in the 
+hospital.
 
-The system allows participants to login via a barcode badge, scan their patients ID band and scan the drugs as they dispense and administer to the patient  Faculty will be able to view the medications live remotely to double to check that participants have not made an error, or if they have they will be able to adjust the simulation for the incorrect medication.
+The system allows participants to login via a barcode badge, scan their 
+patients ID band and scan the drugs as they dispense and administer to 
+the patient  Faculty will be able to view the medications live remotely 
+to double to check that participants have not made an error, or if they 
+have they will be able to adjust the simulation for the incorrect 
+medication.
 
-It is recommended you have some technical know how to setup the system at very minimum a high degree of comfort with a computer.  Using the system should be very simple so any participant that can used a smart phone can use it.  After it has been setup the sets to maintain it are fairly simple, but computer familiarity is required.
+It is recommended you have some technical know how to setup the system 
+at very minimum a high degree of comfort with a computer.  Using the 
+system should be very simple so any participant that can used a smart 
+phone can use it.  After it has been setup the sets to maintain it are 
+fairly simple, but computer familiarity is required.
 
 ## hardware requirements
 ---
