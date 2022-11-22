@@ -1,6 +1,6 @@
 <div id='lilheader' class='three-col-grid'>
-	<div><a href="index.php"><img src="img/logo.png" height=64px style="float:left"></a></div>
-	<div><h2 style="text-align:center;font-family:helvetica, serif;">Ms. Meds</h2></div>
+	<div><a href="index.php"><img src="img/logo.png" height=50px style="float:left"></a></div>
+	<div><h2 style="text-align:center;font-family:helvetica, serif;"><a href="index.php" style="text-decoration:none;">Ms. Meds</a></h2></div>
 	<div style="text-align:right;margin-left:auto;margin-right:0"><?php
 if(isset($_SESSION['AuthPass'])){
 	echo "Hello " . $_SESSION["uFirstName"] . "!<br>";

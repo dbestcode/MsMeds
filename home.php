@@ -1,4 +1,5 @@
 <?php
+// This is a demo of a new layout for patient.php, it currently does nothing
 session_start();
 //included for some html drawing help
 require_once('php/draw.php');

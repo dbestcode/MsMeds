@@ -1,22 +1,34 @@
-<meta http-equiv="refresh" content="1;url=index.php">
+<?php
+/* File: SetSesson.php
+ * Auth: nb
+ * date: 11/22
+ * desc: Set session variable based on what is sent from index.php via post
+ * 		the vairble wil change depending on what was entered on index
+ * 		e.x. user enters: 
+ * 		their ID --> varible'barcode'
+ * 		a Pin    --> varible: 'apin'
+ * 		Patient Id-->varible: 'PatientBarcode'
+ * 		Handles; user id's, user pins, and patient ids
+ * 
+ */
+?>
+<meta http-equiv="refresh" content="2;url=index.php">
 <!DOCTYPE html>
 <html>
 <head>
 <?php
-// Set the session varibles based on what is being enterd on the index page
-// handle user name, then password then patient
-// also takes care of if the patient is 'checked out'
-//7.6.22
 session_start();
 require_once('php/head.php');
 print_head('default');
 echo "</head><body>";
 require ("php/title.php");
+
 //check for userID
 if(isset($_POST["barcode"])) {
 	echo "Finding user ID...<br>";
 	//injection proection
 	include "conn.php";
+	
 	$unsafe_variable = $_POST["barcode"];
 	$safe_variable = mysqli_real_escape_string($conn,$unsafe_variable);
 	//open record with barcode scanned
@@ -42,7 +54,7 @@ if(isset($_POST["barcode"])) {
 }
 //check for patient ID
 if(isset($_POST["PatientBarcode"])) {
-	echo "looking for patient...</br>";
+	echo "Looking for patient...";
 	include "conn.php";
 	$unsafe_variable = $_POST["PatientBarcode"];
 	$safe_variable = mysqli_real_escape_string($conn,$unsafe_variable);
@@ -66,6 +78,7 @@ if(isset($_POST["PatientBarcode"])) {
 			$_SESSION["ReportFile"] = $row["ReportFile"];
 			$_SESSION["HpFile"] = $row["HpFile"];
 		}
+		
 		// check for immortal patient where students cannot remove their info once entered
 		$sql = "SELECT `Immortal` FROM `patients` WHERE `id`=" . $_SESSION["PatientID"];
 		$immortal = $conn->query($sql);
@@ -73,14 +86,13 @@ if(isset($_POST["PatientBarcode"])) {
 			if($row['Immortal']=='1'){
 				if ($_SESSION["AccessLevel"] == 7){
 					header("Location: oper.php");
-					exit;
 				} else{
 					header("Location: patient.php");
-					exit;
 				}
 			}
 		}
-		// checking for curnet records, if found send to opencase for option to delete
+		
+		// checking for current records(meds or notes), if found redirect to 'opencase.php' for option to delete
 		$sql = "SELECT * FROM `drug_admins` WHERE PatientID=" . $_SESSION["PatientID"];
 		$resultone = $conn->query($sql);
 		$sql = "SELECT * FROM `nurse_notes` WHERE PatientID=" . $_SESSION["PatientID"];
@@ -88,13 +100,14 @@ if(isset($_POST["PatientBarcode"])) {
 		if (($resultone->num_rows > 0)||($resulttwo->num_rows > 0)) {
 			header("Location: opencase.php");
 	 	}
+	 	
 		if ($_SESSION["AccessLevel"] == 7){
 			header("Location: oper.php");
 		} else {
-			header("Location: patient.php");
+		  header("Location: patient.php");
 		}
 	} else {
-		echo "0 results";
+		echo "Not found!";
 	}
 	$conn->close();
 }
@@ -115,6 +128,7 @@ if(isset($_SESSION["uPin"]) && isset($_POST["apin"])) {
 		echo "<H1>PIN INVALID</H1>";
 		exit;
 	}
+	
 	if ($_SESSION["AccessLevel"] == 3){
 		header("Location: admin.php");
 	} else {

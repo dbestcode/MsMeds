@@ -1,9 +1,22 @@
-<?php
-session_start();
-//included for some html drawing help
-require_once('php/draw.php');
 
-//prints all patient files 
+<?php
+/* File:	patient.php
+ * Author:	nbest
+ * Date:	11/22
+ * Desc:	Main patient viewing page, functions at top for various html printing
+ * 			
+ */
+ 
+session_start();
+error_reporting(E_ALL);
+//included for html table drawing
+require_once('php/draw.php');
+require('php/head.php');
+
+/* Prints a list of all patient files that are not standard
+ * 
+ * data from from 'patient_files' sql table in 'sudo_meds'
+ */
 function print_files(){
 	include "conn.php";
 	$sql = "SELECT * FROM patient_files WHERE PatientID=" . $_SESSION["PatientID"];
@@ -25,7 +38,9 @@ function print_files(){
 	$conn->close();
 }
 
-//prints drugs given
+/* Prints drugs given for the mar section
+ * pulls from 'drug_admins' sql table 
+ */
 function print_drug_admin(){
 	// Create connection
 	include "conn.php";
@@ -63,7 +78,7 @@ function print_drug_admin(){
 	$conn->close();
 }
 
-//prints all care notes found
+// Prints all care notes found
 function select_notes(){
 	// Create connection &	// Check connection
 	include "conn.php";
@@ -93,17 +108,23 @@ function select_notes(){
 	$conn->close();
 }
 
+/* Prints the default txt for the care note box 
+ * called in the Nursing Notes tab
+ */
 function printdefaultnote($filename){
-	//called in the Nursing Notes tab to prpagate the note
 	if (file_exists($filename)) {
 	$myfile = fopen($filename, "r") or die("Patient has no notes.");
 	echo fread($myfile,filesize($filename));
 	fclose($myfile);
 	}
 }
-error_reporting(E_ALL);
 
-//Catch if this is a reload add nursing note to file
+
+
+/* If page is being self-called to add nursing note
+ * this triggers and adds the note to the sql table
+ * needs PDO added
+ */
 if(isset($_POST['newnote'])) {
 	//db connection object
 	include "conn.php";
@@ -126,18 +147,21 @@ if(isset($_POST['newnote'])) {
         $conn->close();
 }
 
-//catch if a med has been given
+/* If page is being self-called to add med the has been given
+ * if a $_POST["drugid"] will only exsist if a med has been given
+ * 
+ */
 if(isset($_POST["drugid"])) {
-        include "conn.php";
-        $unsafe_variable = $_POST["drugid"];
-        $safe_variable = mysqli_real_escape_string($conn,$unsafe_variable);
-        //open record with barcode scanned
-        $sql = "SELECT * FROM `drugs` WHERE Barcode='$safe_variable'";
-        $result = $conn->query($sql);
+	include "conn.php";
+	$unsafe_variable = $_POST["drugid"];
+	$safe_variable = mysqli_real_escape_string($conn,$unsafe_variable);
+	//open record with barcode scanned
+	$sql = "SELECT * FROM `drugs` WHERE Barcode='$safe_variable'";
+	$result = $conn->query($sql);
 	if ($result->num_rows > 0) {
-          while($row = $result->fetch_assoc()) {
-                $medication=$row;
-          }
+	  while($row = $result->fetch_assoc()) {
+			$medication=$row;
+	  }
 	  $_POST["admintime"] =$_POST["admintime"] . " - " . date("m/d/y");
           $sql = "INSERT INTO drug_admins (DrugID, DrugName, PatientID, UserID, UserInitals, AdminTime)" .
                 " VALUES ('" . $medication["id"] . "', '" . $medication["DrugName"] . "', '" . $_SESSION["PatientID"] . "', '" . $_SESSION["UserID"] . "', '" .
@@ -150,11 +174,15 @@ if(isset($_POST["drugid"])) {
 }
 
 
-require('php/head.php');
+/* 00000000000000000000000000000000000000000000000000000000000000000
+ * Begin printing a page normally here
+ * 00000000000000000000000000000000000000000000000000000000000000000
+ * */
 ?>
-<!DOCTYPE html?
+
+<!DOCTYPE html?>
 <html>
-<head>
+<head>	
 <?php print_head("patient");?>
 	<style>
 	body {font-family: Arial;}

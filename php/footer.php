@@ -6,7 +6,12 @@
   </div>
   <div>
 <?php
-/*foreach ($_SESSION as $key=>$val){
+/* NEVER UNCOMMENT UNLESS DEBUGING!!!!! Major Security Threat
+ *  
+ * 
+ * 
+ *  
+foreach ($_SESSION as $key=>$val){
 echo $key." ".$val."<br/>";
 }*/
   ?>
