@@ -60,3 +60,7 @@ fairly simple, but computer familiarity is required.
 **See MsMeds-DFU-Complete.pdf for complete install directions**
 
 
+## TODO
+---
+* add section about turning off indexing directories in apache
+* improved file upload with deletion capabity

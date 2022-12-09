@@ -138,6 +138,8 @@ li.dropdown {
 <br>-->
 </br>or
 <a href='uploadfiles.php'><h4>Upload Files/PDFs</h4></a></a>
+</br>or
+<a href='update.php'><h4>Upload Files/PDFs(IN TESTING!!!)</h4></a></a>
 <br>
 </div></div>
 <?php include './php/footer.php';?>
