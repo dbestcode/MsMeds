@@ -10,7 +10,7 @@
 // uses $_SESSION['pass']
 define('LAST_WORK','12/8/22'); //< --- @date
 define('PDF_DIR','./patient_files/');
-define('PAGE_TITLE','ECG Simulator');
+define('PAGE_TITLE','Upload Patient Files');
 define('SETTINGS_PASSWORD','simulation');
 
 $target_dir = "patient_files/";
@@ -192,8 +192,7 @@ else if(isset($_POST['sampleText']) AND $_POST['sampleText'] == SETTINGS_PASSWOR
 } 
 else if(!isset($_SESSION['pass'])) //SESSON password and POST password not set, only show password form & exit
 {
-  
-  echo retHead().frmPassword();
+  echo getHead("","").getTitle("Upload Files").frmPassword();
   exit;
 } 
 
