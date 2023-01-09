@@ -64,3 +64,4 @@ Include Dev Log and simple overview of files/folders
 ## Dev Log:
 ---
 * 7.5.22: Created log.  Updated README.md to include pdf computer instructions.
+* 1.8.23: Moving SetSesion into Index, moving fuction files into single includable file called 'common-items.php'

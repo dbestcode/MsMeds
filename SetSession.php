@@ -1,7 +1,7 @@
 <?php
 /* File: SetSesson.php
- * Auth: nb
- * date: 11/22
+ * @author nicholai.best@gmail.com
+ * @date see below
  * desc: Set session variable based on what is sent from index.php via post
  * 		the vairble wil change depending on what was entered on index
  * 		e.x. user enters: 
@@ -11,6 +11,10 @@
  * 		Handles; user id's, user pins, and patient ids
  * 
  */
+ 
+define('LAST_WORK','1/8/2023'); //< --- @date
+define('PAGE_TITLE','Ms.Meds - EHR');
+define('PROJECT_VERSION','1.1');
 ?>
 <meta http-equiv="refresh" content="2;url=index.php">
 <!DOCTYPE html>
@@ -22,6 +26,7 @@ require_once('php/head.php');
 print_head('default');
 echo "</head><body>";
 require ("php/title.php");
+require_once('common-items.php');
 
 //check for userID
 if(isset($_POST["barcode"])) {
