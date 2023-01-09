@@ -4,14 +4,13 @@
  * @author nicholai.best@gmail.com
  * @date see below
  * @desc Default page, user can enter their ID, Pin and Patient ID/MRN
- * 		 All info is sent to SetSession.php for handling
- * 		 SetSession to be moved into this file at some point
  * 
  */
  
 define('LAST_WORK','1/8/2023'); //< --- @date
 define('PAGE_TITLE','Ms.Meds - EHR');
 define('PROJECT_VERSION','1.1');
+define('AUTH_CODE','54792390');
 
 // Values for $_POST['originForm']
 // Used for detemining what data is being sent
@@ -19,9 +18,140 @@ define('FRM_USER_ID',0);      // User ID Scaned, login
 define('FRM_PIN',1);          // Passwrod entered
 define('FRM_PATIENT_CODE',2); // Patient armabdn scanned
 
-pageMain();
+require_once('common-items.php');
+session_start();
+ini_set('display_errors', '1');
+error_reporting(E_ALL);
 
-function SessionType(){
+if (isset($_POST['originForm'])){
+  switch ($_POST['originForm']) {
+  case FRM_USER_ID:
+  // User ID Entered
+    $unsafe_variable = $_POST["barcode"];
+    $conn = ConnectDB();
+    $safe_variable = mysqli_real_escape_string($conn,$unsafe_variable);
+    //open record with barcode scanned
+    $sql = "SELECT id,FirstName,LastName,Barcode,AccessLevel,Pin FROM `users` WHERE Barcode='$safe_variable'";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+      // output data of each row
+      while($row = $result->fetch_assoc()) {
+        $_SESSION["UserID"] = $row["id"];
+        $_SESSION["uFirstName"] = $row["FirstName"];
+        $_SESSION["uLastName"] = $row["LastName"];
+        $_SESSION["AccessLevel"] = $row["AccessLevel"];
+        $_SESSION["uPin"] = $row["Pin"];
+      }
+    } 
+    else
+    {
+      echo "O results";
+      header("Location: adduser.php?barcode=" . $_POST["barcode"]);
+      exit;
+    }
+    $conn->close();
+    pageMain();
+    break;
+  case FRM_PIN:
+  echo 'pin';
+    if(isset($_SESSION["uPin"]) && isset($_POST["apin"])) {
+      if (hash('md5',$_POST["apin"]) == $_SESSION["uPin"]){
+        echo "<h1>Access Granted.</h1>";
+        //echo hash('md5',$_POST["apin"]);
+        $_SESSION["AuthPass"]=AUTH_CODE;
+        unset($_SESSION["uPin"]);
+      } elseif (empty($_SESSION["uPin"])) {
+        echo "<h1>Account has no pin.<br>Access Granted.</h1>";
+        //echo hash('md5',$_POST["apin"]);
+        $_SESSION["AuthPass"]=AUTH_CODE;
+        unset($_SESSION["uPin"]);
+      } else {
+        echo "<H1>PIN INVALID</H1>";
+        exit;
+      }
+
+      //if ($_SESSION["AccessLevel"] == 3){
+      //  header("Location: admin.php");
+      //} else {
+        header("Location: index.php");
+      //}
+
+    }
+    exit;
+    break;
+  case FRM_PATIENT_CODE:
+    echo "Looking for patient...";
+    if(isset($_POST["PatientBarcode"])) {
+
+    $conn = ConnectDB();
+    $unsafe_variable = $_POST["PatientBarcode"];
+    $safe_variable = mysqli_real_escape_string($conn,$unsafe_variable);
+    //open record with barcode scanned
+    $sql = "SELECT * FROM `patients` WHERE Barcode='$safe_variable'";
+    $result = $conn->query($sql);
+    //A patient has been found
+    if ($result->num_rows > 0) {
+      echo "Found...</br>";
+      // output data of each row
+      while($row = $result->fetch_assoc()) {
+        $_SESSION["PatientID"] = $row["id"];
+        $_SESSION["pFirstName"] = $row["FirstName"];
+        $_SESSION["pLastName"] = $row["LastName"];
+        $_SESSION["pDOB"] = $row["DOB"];
+        $_SESSION["pBarcode"] = $row["Barcode"];
+        $_SESSION["Provider"] = $row["Provider"];
+        $_SESSION["MarFile"] = $row["MarFile"];
+        $_SESSION["HpFile"] = $row["HpFile"];
+        $_SESSION["OrdersFile"] = $row["OrdersFile"];
+        $_SESSION["ReportFile"] = $row["ReportFile"];
+        $_SESSION["HpFile"] = $row["HpFile"];
+      }
+      
+      // check for immortal patient where students cannot remove their info once entered
+      /* UNDERUTILIZED, CURRENTLY DIABLED
+       * DATABASE DOESNT HAVE THIS FEILD BY DEFAULT
+      $sql = "SELECT `Immortal` FROM `patients` WHERE `id`=" . $_SESSION["PatientID"];
+      $immortal = $conn->query($sql);
+      while($row = $immortal->fetch_assoc()) {
+        if($row['Immortal']=='1'){
+          if ($_SESSION["AccessLevel"] == 7){
+            header("Location: oper.php");
+          } else{
+            header("Location: patient.php");
+          }
+        }
+      }*/
+      
+      // checking for current records(meds or notes), if found redirect to 'opencase.php' for option to delete
+      $sql = "SELECT * FROM `drug_admins` WHERE PatientID=" . $_SESSION["PatientID"];
+      $resultone = $conn->query($sql);
+      $sql = "SELECT * FROM `nurse_notes` WHERE PatientID=" . $_SESSION["PatientID"];
+      $resulttwo = $conn->query($sql);
+      if (($resultone->num_rows > 0)||($resulttwo->num_rows > 0)) {
+        header("Location: opencase.php");
+      }
+      header("Location: opencase.php");
+      if ($_SESSION["AccessLevel"] == 7){
+        header("Location: oper.php");
+      } else {
+        header("Location: patient.php");
+      }
+    } else {
+      echo "Not found!";
+    }
+    $conn->close();
+    }
+    break;
+  }
+} 
+else
+{
+  pageMain();
+}
+
+
+
+function getLoginFrm(){
 /* called middle of page
  * Produces content based on current login status
  *  e.x. UserID verified, pin vailidated, patient located
@@ -35,7 +165,7 @@ function SessionType(){
   {
 		$htmlpage .= "
     <p><h3>Please scan the Patient ID band<br/> or enter the MRN</h3>
-		<br><form name='input' action='SetSession.php' method='post'>
+		<br><form action='".$_SERVER['PHP_SELF']."' method='post'>
     <input name='originForm' type='hidden' value='".FRM_PATIENT_CODE."'>
 		<input type='text' name='PatientBarcode' autofocus></form></p>";
 	/* A Valid user ID has been entered, prompt for a 'pin'
@@ -47,7 +177,8 @@ function SessionType(){
 		$htmlpage .= "
     <br><h2>Welcome " . $_SESSION["uFirstName"] . "!</h2>
 		<p>Enter your PIN
-		<br><form name='input' action='SetSession.php' method='post'><input type='password' name='apin' autofocus>
+		<br><form action='".$_SERVER['PHP_SELF']."' method='post'>
+    <input type='password' name='apin' autofocus>
     <input name='originForm' type='hidden' value='".FRM_PIN."'></form>
 		or <a href='logout.php'>return to login</a>";
 	/* No session variables of consiquence are set prompt for user name
@@ -58,7 +189,7 @@ function SessionType(){
   {
 		$htmlpage .= "
     <p>Please scan your ID now.</p>
-		<br><form name='input' action='SetSession.php' onsubmit='return validateForm()' method='post'>
+		<br><form action='".$_SERVER['PHP_SELF']."' method='post' onsubmit='return validateForm()'>
     <input name='originForm' type='hidden' value='".FRM_USER_ID."'>
     <input type='text' name='barcode' autofocus></form>";
 	}
@@ -66,10 +197,8 @@ function SessionType(){
 }
 
 function pageMain(){
-  session_start();
-  ini_set('display_errors', '1');
-  error_reporting(E_ALL);
-  require_once('common-items.php');
+
+  
 
   $validscript ="
     <script>
@@ -86,7 +215,7 @@ function pageMain(){
     <div class='vhcenter' style='text-align:center'>
       <img src='img/logo.png' width='150'>".
     
-     SessionType()."
+     getLoginFrm()."
      
     </div>
   </div>";
