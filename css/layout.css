@@ -130,13 +130,16 @@ color:black;
 }
 a.middle{
 	vertical-align: middle;
-}
+} grid.css
 */
 
 a:hover,a:active{
 background-color:#c0c0c0;
 color:black;
 }
+a{background-color:transparent;-webkit-text-decoration-skip:objects}
+a:active,a:hover{outline-width:0}
+a{color:inherit}
 
 p{
 word-wrap:break-word;
@@ -199,3 +202,20 @@ input[type=button], input[type=submit], input[type=reset] {
 	-ms-transform:translateY(-50%, -50%);
 	transform:translate(-50%, -50%);
 }
+.retro-font{  font-family: 'Press Start 2P';
+}
+.centre{text-align:center}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  gap: 5px;
+  background-color: #003366;
+  padding: 5px;
+}
+
+.grid-container > div {
+  background-color: rgba(255, 255, 255, 01);
+  border: 1px solid black;
+}
+
