@@ -35,7 +35,7 @@ function getTitle($subtitle){
   <div>
     <h2 class='retro-font centre'><a href='index.php' style='text-decoration:none;'>Ms. Meds</a></h2>
   </div>
-  <div style='text-align:right;margin-left:auto;margin-right:0'>";
+  <div style='text-align:right;margin-left:auto;margin-right:0;' class='top-nav-font'>";
 
   if(isset($_SESSION['AuthPass'])){
     $titlehtml .= "Hello " . $_SESSION["uFirstName"] . "!<br>";
@@ -117,7 +117,7 @@ function htmlComment($sectionTitle,$htmlTxt)
 
 //return a random string of the legnth in param
 function randomString($strlength)
-	{
+{
     
 		//$a='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $a='0123456789';
@@ -127,7 +127,20 @@ function randomString($strlength)
 			$res.=$a[mt_rand(0,strlen($a)-1)];
 		}
 		return $res;
-	}
+}
+  
+function tablecell($celldata) {
+	return "<td>".$celldata."</td>";
+}
+function tablerow($celldata) {
+	return "<tr>".$celldata."</tr>\n";
+}
+function tablehead($celldata) {
+	return "<th>".$celldata."</th>\n";
+}
+function html_heading($celldata,$size) {
+	return "<h" . $size . ">".$celldata."</h" . $size  . ">\n";
+}
 
 function ConnectDB(){
   $servername = "localhost";
