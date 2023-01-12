@@ -48,14 +48,14 @@ function getTitle($subtitle){
         //Sim Staff view
             $titlehtml .= "<a href='drugs.php' class='abutton'>Student Activity</a>";
   //	        $titlehtml .= "<a href='oper.php' class='abutton'>Surgical Portal</a>";
-            $titlehtml .= "<a href='admin.php' class='abutton'>Admin Portal</a>";
+            $titlehtml .= "<a href='settings.php' class='abutton'>Admin Portal</a>";
             break;
         case 4:
         //DEV VIEW
             $titlehtml .= "
             <a href='drugs.php' class='abutton'>Student Activity</a>
             <a href='ioreport.php' class='abutton'>Surgical Portal</a>
-            <a href='admin.php' class='abutton'>Admin Portal</a>";
+            <a href='settings.php' class='abutton'>Admin Portal</a>";
             break;
         case 7:
         //SURG Tech
@@ -68,7 +68,8 @@ function getTitle($subtitle){
   }
 $titlehtml .= "
   </div>
-</div>";
+</div>
+<div class='centre'><h3>".$subtitle."</h3></div>";
 
   return htmlComment('title',$titlehtml);
 
@@ -84,7 +85,7 @@ function getTail(){
   <div><!--Written by Nicholai Best, nicholai.best@gmail.com--></div>
   <div class='center-col'>
     <p style='text-align:center'>For issues, please call the 'pharmacy' 
-                                 or ask a staff member.<br>©2022 | All Rights Reserved |<a href='https://www.iosimulation.com'>iosimulation.com</a></p>
+                                 or ask a staff member.<br>©2022 | All Rights Reserved | <a href='https://www.iosimulation.com'>iosimulation.com</a></p>
   </div>
   <div>";
 
@@ -92,11 +93,11 @@ function getTail(){
  *  
  * 
  * 
- */  
+ *  
 foreach ($_SESSION as $key=>$val){
 echo $key." ".$val."<br/>";
 }
-
+*/
   
   $txthtml .="
 
@@ -133,13 +134,16 @@ function tablecell($celldata) {
 	return "<td>".$celldata."</td>";
 }
 function tablerow($celldata) {
-	return "<tr>".$celldata."</tr>\n";
+	return "
+  <tr>".$celldata."</tr>";
 }
 function tablehead($celldata) {
-	return "<th>".$celldata."</th>\n";
+	return "
+  <th>".$celldata."</th>";
 }
 function html_heading($celldata,$size) {
-	return "<h" . $size . ">".$celldata."</h" . $size  . ">\n";
+	return "
+  <h" . $size . ">".$celldata."</h" . $size  . ">";
 }
 
 function ConnectDB(){
@@ -160,7 +164,7 @@ function ConnectDB(){
 function ValidateUser(){
   session_start();
   // if clearance is high enough and they have correctly enterd a pin proceed
-  // other wise admin pages do not display
+  // other wise settings pages do not display
   if ($_SESSION["AuthPass"]=54792390) {
     if (($_SESSION["AccessLevel"]==4) || ($_SESSION["AccessLevel"]==3)) {
       return;
