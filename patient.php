@@ -1,4 +1,3 @@
-
 <?php
 /* File:	patient.php
  * Author:	nbest
@@ -6,19 +5,22 @@
  * Desc:	Main patient viewing page, functions at top for various html printing
  * 			
  */
- 
+define('LAST_WORK','1/9/2023'); //< --- @date
+define('PAGE_TITLE','Ms.Meds - EHR');
+define('PROJECT_VERSION','1.1');
+define('AUTH_CODE','54792390');
+
 session_start();
 error_reporting(E_ALL);
 //included for html table drawing
-require_once('php/draw.php');
-require('php/head.php');
+require('common-items.php');
 
 /* Prints a list of all patient files that are not standard
  * 
  * data from from 'patient_files' sql table in 'sudo_meds'
  */
 function print_files(){
-	include "conn.php";
+	$conn = ConnectDB();
 	$sql = "SELECT * FROM patient_files WHERE PatientID=" . $_SESSION["PatientID"];
 	$result = $conn->query($sql);
 	//makes table of all files found prints a row for each record
@@ -43,7 +45,7 @@ function print_files(){
  */
 function print_drug_admin(){
 	// Create connection
-	include "conn.php";
+	$conn = ConnectDB();
  	//--load drug_admins from database into array 'medorders'
 	$sql = "SELECT * FROM drug_admins WHERE drug_admins.PatientID=" . $_SESSION["PatientID"] . " ORDER BY drug_admins.RealTime DESC";
 	$result = $conn->query($sql);
@@ -81,7 +83,7 @@ function print_drug_admin(){
 // Prints all care notes found
 function select_notes(){
 	// Create connection &	// Check connection
-	include "conn.php";
+	$conn = ConnectDB();
 	//select from notes but join to add user info in place of UID
 	$sql = "SELECT n.DateTime, n.HR, n.RR, n.Bp, n.Spo, n.Note, u.FirstName,u.LastName FROM nurse_notes as n INNER JOIN users as u ON u.id=n.UserID WHERE n.PatientID=" . 
 	$_SESSION["PatientID"] . " ORDER BY n.DateTime DESC";
@@ -119,15 +121,13 @@ function printdefaultnote($filename){
 	}
 }
 
-
-
 /* If page is being self-called to add nursing note
  * this triggers and adds the note to the sql table
  * needs PDO added
  */
 if(isset($_POST['newnote'])) {
 	//db connection object
-	include "conn.php";
+	$conn = ConnectDB();
 	//escape all user input for injections
 	foreach ($_POST as $key=>$val){
 		$sqlsafe=mysqli_real_escape_string($conn,$val);
@@ -144,15 +144,14 @@ if(isset($_POST['newnote'])) {
 	$safevar["Spo"] . "', '" .
 	$safevar["Note"] . "')";
 	$result = $conn->query($sql);
-        $conn->close();
+  $conn->close();
 }
 
 /* If page is being self-called to add med the has been given
  * if a $_POST["drugid"] will only exsist if a med has been given
- * 
  */
 if(isset($_POST["drugid"])) {
-	include "conn.php";
+	$conn = ConnectDB();
 	$unsafe_variable = $_POST["drugid"];
 	$safe_variable = mysqli_real_escape_string($conn,$unsafe_variable);
 	//open record with barcode scanned
@@ -183,153 +182,94 @@ if(isset($_POST["drugid"])) {
  * begin print page here
  * -----------------------------------------------
  */
-
-?>
-
-
-<!DOCTYPE html?>
-<html>
-<head>	
-<?php print_head("patient");?>
-	<style>
-	body {font-family: Arial;}
-	/* Style the tab */
-	.tab {
-	  overflow: hidden;
-	  border: 1px solid #ccc;
-	  background-color: #f1f1f1;
-	}
-
-	/* Style the buttons inside the tab */
-	.tab button {
-	  background-color: inherit;
-	  float: left;
-	  border: none;
-	  outline: none;
-	  cursor: pointer;
-	  padding: 14px 16px;
-	  transition: 0.3s;
-	  font-size: 17px;
-	}
-
-	/* Change background color of buttons on hover */
-	.tab button:hover {
-	  background-color: #ddd;
-	}
-
-	/* Create an active/current tablink class */
-	.tab button.active {
-	  background-color: #ccc;
-	}
-
-	/* Style the tab content */
-	.tabcontent {
-	  display: none;
-	  padding: 6px 12px;
-	  border: 1px solid #ccc;
-	  border-top: none;
-	 -webkit-animation: fadeEffect 1s;
-	 animation: fadeEffect 1s;
-	}
-	th, td {
-	  padding: 5px;
-	}
-	@-webkit-keyframes fadeEffect{
-	 from {opacity: 0;}
-	 to {opacity:1 ;}
-	}
-	@keyframes fadeEffect{
-	 from {opacity: 0;}
-	 to {opacity:1 ;}
-	}
-</style>
-
+$validscript ="
 <script>
 
 function validateMedAdmin() {
-	const x = document.forms["adminmed"]["admintime"].value;
-	const id = document.forms["adminmed"]["drugid"].value;
-	if (x == "") {
-		alert("Enter a 'Sim' time");
+	const x = document.forms['adminmed']['admintime'].value;
+	const id = document.forms['adminmed']['drugid'].value;
+	if (x == '') {
+		alert('Enter a time, move to next box and scan a drug');
 		return false;
 	}
-	const rights = ["Patient", "Medication", "Dose", "Time", "Route", "Documentation"];
+  if (id == '') {
+		alert('Enter a time, move to next box and scan a drug');
+		return false;
+	}
+	const rights = ['Patient', 'Medication', 'Dose', 'Time', 'Route', 'Documentation'];
 
-	let txt = "";
+	let txt = '';
 	for (let x in rights) {
-		txt += rights[x] + "?\n";
+		txt += rights[x] + '?\n';
 	}
-	if (confirm("Do you have the right \n" +txt )) {
-		//alert("Proceed with Medication Administration");
+	if (confirm('Do you have the right \n' +txt )) {
+		//alert('Proceed with Medication Administration');
 	} else {
-		alert("Administration Canceled...");
+		alert('Administration Canceled...');
 		return false;
 	}
 }
-function parseMarkdown(markdownText) {
-	const htmlText = markdownText
-		.replace(/^### (.*$)/gim, '<h3>$1</h3>')
-		.replace(/^## (.*$)/gim, '<h2>$1</h2>')
-		.replace(/^# (.*$)/gim, '<h1>$1</h1>')
-		.replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>')
-		.replace(/\*\*(.*)\*\*/gim, '<b>$1</b>')
-		.replace(/\*(.*)\*/gim, '<i>$1</i>')
-		.replace(/!\[(.*?)\]\((.*?)\)/gim, "<img alt='$1' src='$2' />")
-		.replace(/\[(.*?)\]\((.*?)\)/gim, "<a href='$2'>$1</a>")
-		.replace(/\n$/gim, '<br />')
-
-	return htmlText.trim()
-}
-
 </script>
-</head>
+";
+echo getHead(PAGE_TITLE,LAST_WORK,$c).getTitle("");
 
-<body>
-<?php include "php/title.php";?>
-<div style="text-align:center">
-	<?php echo "<div><pre><strong>Patient:</strong> " .	$_SESSION["pFirstName"] . " " .	$_SESSION["pLastName"] . 
-		" <strong>    DOB: </strong>" . $_SESSION["pDOB"] . "<strong>    MRN: </strong>" . $_SESSION["pBarcode"] . "<strong>    Provider: </strong>" . $_SESSION["Provider"] .
-		"</pre></div>";
-	?>
+
+	
+
+
+echo "
+<div style='text-align:center'>
+	
+  <pre><strong>Patient:</strong> " .	$_SESSION["pFirstName"] . " " .	$_SESSION["pLastName"] . 
+  "<strong>    DOB: </strong>" . $_SESSION["pDOB"] . 
+  "<strong>    MRN: </strong>" . $_SESSION["pBarcode"] . 
+  "<strong>    Provider: </strong>" . $_SESSION["Provider"] . "</pre>
+  
 </div>
-<div class="tab">
-<!--	<button class="tablinks" onclick="openTab(event, 'home')">Home</button>-->
-	<button class="tablinks" onclick="openTab(event, 'report')" id="defaultOpen">Shift Report</button>
-	<button class="tablinks" onclick="openTab(event, 'hp')">H & P</button>
-	<button class="tablinks" onclick="openTab(event, 'mdorders')">Orders</button>
-	<button class="tablinks" onclick="openTab(event, 'DHistory')"> Diagnostics(Labs, Rad, etc..)</button>
-	<button class="tablinks" onclick="openTab(event, 'emar')" id="dbutton">Medications</button>
-	<button class="tablinks" onclick="openTab(event, 'nursenote')" id="nbutton">Care Notes</button>	
+<div class='pt-menu'>
+  <button class='tablinks' onclick='openTab(event, \"home\")'>Overview</button>
+	<button class='tablinks' onclick='openTab(event, \"report\")' id='defaultOpen'>Shift Report</button>
+	<button class='tablinks' onclick='openTab(event, \"hp\")'>H & P</button>
+	<button class='tablinks' onclick='openTab(event, \"mdorders\")'>Orders</button>
+	<button class='tablinks' onclick='openTab(event, \"DHistory\")'> Diagnostics(Labs, Rad, etc..)</button>
+	<button class='tablinks' onclick='openTab(event, \"emar\")' id='dbutton'>Medications</button>
+	<button class='tablinks' onclick='openTab(event, \"nursenote\")' id='nbutton'>Care Notes</button>	
 </div>
-<div id="emar" class="tabcontent">
-  	<div class="two-col-grid">
-		<div><h2>Medication Ordered</h2>
-		<?php
-		echo "<embed src='patient_files/" . $_SESSION["MarFile"] ;
-		echo "#view=FitH&navpanes=0&toolbar=0' type='application/pdf' width='100%' height='800px' align='middle' />";
-		?>
-		</div>
+
+<div id='emar' class='tabcontent'>
+<div class='two-col-grid'>
+  <div><h2>Medication Ordered</h2>";
+echo "  <embed src='patient_files/" . $_SESSION["MarFile"] . 
+    "#view=FitH&navpanes=0&toolbar=0' type='application/pdf' width='100%' height='800px' align='middle' />
+  </div>
+  <!--col 2 -->
 		<div>
-			<h2>Medications Given</h2>
-			<form name='adminmed' action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>' onsubmit='return validateMedAdmin()' method='post'>
+			<h2>Administer Medications</h2>
+      <span class='warning'><ol>
+        <li>Enter a time for administration</li>
+        <li>Tab to next box</li>
+        <li>Scan a medication</li>
+      </ol></span>";
+			echo "<form name='adminmed' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) ."' onsubmit='return validateMedAdmin()' method='post'>
 			<table class='nnote'>
 			<tr><td>'Sim' Time:(e.x. 1415)</td><td><input type='text' name='admintime' ></td></tr>
-			<tr><td>Scan Medication:<br></td><td><input type='text' name='drugid' autofocus>
-			<?php 
+			<tr><td>Scan Medication:<br></td><td><input type='text' name='drugid' autofocus>";
+			
 			if(isset($_POST["drugid"])) {
 				if($_POST["drugid"]=="0") {
 					echo "<span style='color:red;font-weight:bold;'>DRUG NOT FOUND</span>";
 				}
 			}
-			?></td></tr>
-			<!-- <tr><td colspan="2"><input type='submit' value="Administer"></td></tr> -->
+      echo"
+        </td></tr>
 			</table>
-			<input type="submit" style="display: none" />
+			<input type='submit' style='display: none' />
 			</form>
-			<?php print_drug_admin();?>
+			" .print_drug_admin(). "
 		</div>
 	</div>
-</div>
+</div>";
+?>
 
 <div id="nursenote" class="tabcontent">
 	<div class="two-col-grid">
@@ -369,28 +309,6 @@ function parseMarkdown(markdownText) {
 	<p>Contains Medication Orders and record of all medication given before and during you simulation.</p> 
 	<p><strong>Care Notes:</strong></p> 
 	<p>A place to chart note on your patient&rsquo;s care, status and vitals.</p></td>
-	<pre>
-
-
-	<?php
-//	echo readfile("HELP.md");
-	?>
-	</pre>
-	<script>
-		let file = 'HELP.md';
-		let reader = new FileReader();
-		reader.onload = (e) => {
-		        const file = e.target.result;
-		        const lines = file.split(/\r\n|\n/);
-       			for(var line = 0; line < lines.length-1; line++){
-				console.log(line + " --> "+ lines[line]);
-			}
-
-		        textarea.value = lines.join('\n');
-		};
-
-		reader.readAsText(file);
-  	</script>
 </div>
 <div id="mdorders" class="tabcontent">
 	<?php

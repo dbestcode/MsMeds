@@ -2,9 +2,9 @@
 // File: admin.php
 // Main menu for administrator for MsMeds
 require('./php/cherry.php');
-require_once('./php/head.php');
+require_once('./common-items.php');
 
-/*
+
 if(isset($_POST['ast'])) {
 	$_SESSION['activetable']=$_POST['ast'];
 	echo $_POST[ast];
@@ -15,14 +15,14 @@ if(isset($_POST['ast'])) {
 	}
 } else {
 	unset($_SESSION['activetable']);
-}*/
+}
 
 ?>
 
 <html>
 
 <head>
-<?php print_head("admin");?>
+
 	<style>
 ul {
   list-style-type: none;
@@ -117,29 +117,29 @@ li.dropdown {
 <div id="ccontainer" class='container' style='height:400px;width:800;'>
 <h1>Administration Portal</h1>
 <a href='../phpmyadmin'><h4>phpMyAdmin</h4></a>(edit paitents, medications, users, other data...)
-<!---
+
 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
 <p style="text-align:left">
 <?php
-    /*$tables = array("patients", "users", "drugs", "patient_files","or_report");
+    $tables = array("patients", "users", "drugs", "patient_files","or_report");
     $tablelabels = array("Patients", "System Users", "Medications", "Supplemental Patient Files","IO reports");
     $i=0;
     foreach ($tables as $value) {
         echo "<input type='radio' id='a$value' name='ast' value='$value'>";
         echo "<label for='a$value'>" . $tablelabels[$i] . "</label><br />";
         $i++;
-    }*/
+    }
 ?>
 </p>
 <input type="submit" name="submit" value="View/Edit">
 <input type="submit" name="submit" value="Add New Item">
 </form>
 </p>
-<br>-->
+<br>
 </br>or
-<a href='uploadfiles.php'><h4>Upload Files/PDFs</h4></a></a>
-<!--</br>or
-<a href='update.php'><h4>Upload Files/PDFs(IN TESTING!!!)</h4></a></a>-->
+<a href='uploadfiles.php'><h4>Upload Files/PDFs</h4></a>
+</br>or
+<a href='update.php'><h4>Upload Files/PDFs(IN TESTING!!!)</h4></a>
 <br>
 </div></div>
 <?php include './php/footer.php';?>

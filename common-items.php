@@ -16,8 +16,9 @@ Simulated Devices
   <meta name='viewport' content='width=device-width, initial-scale=1' />
   <link rel='shortcut icon' type='image/png' href='img/favicon.png'/>
   <link rel='stylesheet' type='text/css' href='css/layout.css'/>
-  <link rel='stylesheet' href='css/w3mobile.css'>
+  
   <link rel='stylesheet' href='css/main.css'>
+  <link href='https://fonts.googleapis.com/css?family=Press Start 2P' rel='stylesheet'>
   <meta name='viewport' content='width=device-width, initial-scale=1.0'> 
   <link rel='shortcut icon' type='image/png' href='img/favicon.png'/>
   <title>".$title."</title>".$extrahtml."
@@ -32,10 +33,9 @@ function getTitle($subtitle){
 <div id='lilheader' class='three-col-grid'>
   <div><a href='index.php'><img src='img/logo.png' height=50px style='float:left'></a></div>
   <div>
-    <h2 style='text-align:center;font-family:helvetica, serif;'>
-    <a href='index.php' style='text-decoration:none;'>Ms. Meds</a></h2>
+    <h2 class='retro-font centre'><a href='index.php' style='text-decoration:none;'>Ms. Meds</a></h2>
   </div>
-  <div style='text-align:right;margin-left:auto;margin-right:0'>";
+  <div style='text-align:right;margin-left:auto;margin-right:0;' class='top-nav-font'>";
 
   if(isset($_SESSION['AuthPass'])){
     $titlehtml .= "Hello " . $_SESSION["uFirstName"] . "!<br>";
@@ -55,7 +55,6 @@ function getTitle($subtitle){
             $titlehtml .= "
             <a href='drugs.php' class='abutton'>Student Activity</a>
             <a href='ioreport.php' class='abutton'>Surgical Portal</a>
-            <a href='setglu.php' class='abutton'>Set Glucose</a>
             <a href='admin.php' class='abutton'>Admin Portal</a>";
             break;
         case 7:
@@ -93,10 +92,10 @@ function getTail(){
  *  
  * 
  * 
- *  
+ */  
 foreach ($_SESSION as $key=>$val){
 echo $key." ".$val."<br/>";
-}*/
+}
 
   
   $txthtml .="
@@ -118,7 +117,7 @@ function htmlComment($sectionTitle,$htmlTxt)
 
 //return a random string of the legnth in param
 function randomString($strlength)
-	{
+{
     
 		//$a='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $a='0123456789';
@@ -128,7 +127,20 @@ function randomString($strlength)
 			$res.=$a[mt_rand(0,strlen($a)-1)];
 		}
 		return $res;
-	}
+}
+  
+function tablecell($celldata) {
+	return "<td>".$celldata."</td>";
+}
+function tablerow($celldata) {
+	return "<tr>".$celldata."</tr>\n";
+}
+function tablehead($celldata) {
+	return "<th>".$celldata."</th>\n";
+}
+function html_heading($celldata,$size) {
+	return "<h" . $size . ">".$celldata."</h" . $size  . ">\n";
+}
 
 function ConnectDB(){
   $servername = "localhost";
@@ -140,6 +152,8 @@ function ConnectDB(){
   // Check connection
   if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
+  } else {
+    return $conn;
   }
 }
 
