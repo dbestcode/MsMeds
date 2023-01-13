@@ -2,46 +2,54 @@
 // File: admin.php
 // Main menu for administrator for MsMeds
 
-define('LAST_WORK','1/8/2023'); //< --- @date
+define('LAST_WORK','1/12/2023'); //< --- @date
 define('PAGE_TITLE','Ms.Meds - EHR');
 define('PROJECT_VERSION','1.1');
+
+define('PDF_DIR','./patient_files/');
 
 // Values for $_POST['originForm']
 // Used for detemining what data is being sent
 define('FRM_VIEW_TABLE',0);   // View a table
-define('FRM_SELECT_ITEM',1);          // Edit an Item
-define('FRM_UPDATE_ITEM',2);          // Edit an Item
-define('FRM_DEL_ITEM',3); // Delete an item
-define('FRM_NEW_ITEM',4); // Delete an item
+define('FRM_SELECT_ITEM',1);  // Edit an Item
+define('FRM_UPDATE_ITEM',2);  // Edit an Item
+define('FRM_DEL_ITEM',3);     // Delete an item
+define('FRM_NEW_ITEM',4);     // New item
 
-// Values for $_POST['selectedTable']
+// Values for $_POST['selectedTable'] i.e. the table names in the DB
 define('TBL_PATIENTS','patients');
 define('TBL_USERS','users');
 define('TBL_DRUGS','drugs');
 define('TBL_IO_REPORT','io_report');
 
+/* Basically any generic function 
+ * 
+ * getHead
+ * getTitle
+ * getTail
+ * table*
+ * ConnectDB
+ */
 require_once('./common-items.php');
-
 ValidateUser();
-
-//echo $_POST['originForm'] . "-".$_POST['selectedTable'];
 
 if (isset($_POST['originForm'])){
   switch ($_POST['originForm']) {
   case FRM_VIEW_TABLE:
-  // What am I?
+  // view whole datatable
     pageViewTable();
     exit;
     break;
   case FRM_SELECT_ITEM:
-  // What am I?
+  // View a single record in a datatable
     pageSelectItem();
     exit;
     break;
   case FRM_UPDATE_ITEM:
-  // What am I?
-    pageUpdateRow();
-    pageSelectItem();
+  // alter a record in a datatable
+    $updatemessage = '';
+    UpdateRow($updatemessage);
+    pageSelectItem($updatemessage);
     exit;
     break;
   case FRM_DEL_ITEM:
@@ -62,12 +70,6 @@ else
 // Display a table
 function pageViewTable(){
   
-  if(isset($_POST['edititem'])) {
-    echo "edit: " . $_POST['edititem'];
-    $_SESSION['edititem']=$_POST['edititem'];
-    header("Location: edit.php");
-  }
-
   if(isset($_POST['deleteitem'])) {
           echo "delete: " . $_POST['deleteitem'];
     $_SESSION['deleteitem']=$_POST['deleteitem'];
@@ -77,7 +79,8 @@ function pageViewTable(){
   echo getHead('','').getTitle('');
 
   $conn = ConnectDB();
-  //sort based on the table selected
+  // sort based on the table selected, YES this could be single statement
+  // BUT each table need a different sort... so why !?
   switch ($_POST["selectedTable"]){
   case TBL_PATIENTS:
     $sql = "SELECT * FROM `patients` ORDER BY `patients`.`LastName` ASC";
@@ -134,125 +137,33 @@ function pageViewTable(){
   $conn->close();
   echo getTail();
 }
-/*
-
-		header("Location: additem.php");
-
-*/
+///		header("Location: additem.php");
 
 function pageMainMenu(){
-
-echo getHead('Settings',LAST_WORK,'');
-/*
-	<style>
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
+  echo getHead('Settings',LAST_WORK,'');
+  echo getTitle('Admin Portal');
+  echo "
+<div class='centre'>
+  
+  <form action=".htmlspecialchars($_SERVER['PHP_SELF'])." method='post'>
+  <h3>Edit Table</h3>
+    <input type='hidden' name='originForm' value='".FRM_VIEW_TABLE."'><br />
+    <button class = 'abutton' type='submit' id='apatients' name='selectedTable' value='".TBL_PATIENTS."'>Patients</button><br />
+    <button class = 'abutton' type='submit' id='ausers' name='selectedTable' value='".TBL_USERS."'>Users</button><br />
+    <button class = 'abutton' type='submit' id='adrugs' name='selectedTable' value='".TBL_DRUGS."'>Medications</button><br />
+    <button class = 'abutton' type='submit' id='aor_report' name='selectedTable' value='".TBL_IO_REPORT."'>OR Reports</button><br />
+  </form>
+</div>";
+  echo getTail();
 }
 
-li {
-  float: left;
-}
-
-li a, .dropbtn {
-  display: inline-block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
-
-li a:hover, .dropdown:hover .dropbtn {
-  background-color: #fa661c;
-}
-
-li.dropdown {
-  display: inline-block;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  text-align: left;
-}
-
-.dropdown-content a:hover {background-color: #fa661c}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-</style>*/
-
-
-echo getTitle('Admin Portal');
-echo "<div class='centre'>
-<form action=".htmlspecialchars($_SERVER['PHP_SELF'])." method='post'>
-  <input type='hidden' name='originForm' value='".FRM_VIEW_TABLE."'><br />
-  <button type='submit' id='apatients' name='selectedTable' value='".TBL_PATIENTS."'>Patients</button><br />
-  <button type='submit' id='ausers' name='selectedTable' value='".TBL_USERS."'>Users</button><br />
-  <button type='submit' id='adrugs' name='selectedTable' value='".TBL_DRUGS."'>Medications</button><br />
-  <button type='submit' id='aor_report' name='selectedTable' value='".TBL_IO_REPORT."'>OR Reports</button><br />
-</form></div>";
-echo getTail();
-/*echo "
-<div id='content'>
-<div id='ccontainer' class='container' style='height:400px;width:800;'>
-<h1>Administration Portal</h1>
-<a href='../phpmyadmin'><h4>phpMyAdmin</h4></a>(edit paitents, medications, users, other data...)
-
-<form action=".htmlspecialchars($_SERVER['PHP_SELF'])." method='post'>
-<p style='text-align:left'>";
-
-    $tables = array("patients", "users", "drugs", "patient_files","or_report");
-    $tablelabels = array("Patients", "System Users", "Medications", "Supplemental Patient Files","IO reports");
-    $i=0;
-    foreach ($tables as $value) {
-        echo "
-        <input type='radio' id='a$value' name='ast' value='$value'>";
-        echo "
-        <label for='a$value'>" . $tablelabels[$i] . "</label><br />";
-        $i++;
-    }
-echo "
-</p>
-<input type='submit' name='submit' value='View/Edit'>
-<input type='submit' name='submit' value='Add New Item'>
-</form>";*/
-
-
-
-
-
-/*</p>
-<br>
-</br>or
-<a href='uploadfiles.php'><h4>Upload Files/PDFs</h4></a></a>
-</br>or
-<a href='update.php'><h4>Upload Files/PDFs(IN TESTING!!!)</h4></a></a>
-<br>*/
-
-
-}
-
-function pageSelectItem(){
+function pageSelectItem(&$msg){
 
 echo getHead('Settings',LAST_WORK,'').getTitle('');
-
+echo "
+<div class='middle-col-grid'>
+  <div></div>
+  <div>";
 $conn = ConnectDB();
 
 $sql = "SELECT * FROM ".$_POST["selectedTable"]." WHERE id=" . $_POST["itemIndex"];
@@ -262,12 +173,10 @@ if ($result->num_rows > 0) {
 	$i=0;
 	while($row = $result->fetch_assoc()) {
 		$table[$i]=$row;
-		$i++;
-    echo $i . "<br>";
 	}
 		//List keys and print as table headers
 	echo "
-  <form name ='FRMEDIT' method='post' action=". htmlspecialchars($_SERVER['PHP_SELF']) . ">";
+  <form method='post' action=". htmlspecialchars($_SERVER['PHP_SELF']) . " enctype='multipart/form-data'>";
 	echo "
   <table>";
 	echo "<tr>
@@ -291,8 +200,8 @@ if ($result->num_rows > 0) {
 		case "ReportFile":
 			echo "<tr>";
 			echo tablecell($x.": ");
-			echo tablecell("<a href='./patient_files/".$x_value . "' target='_blank'>$x_value</a>");
-      echo tablecell("<input type='file' name='$x'>");
+			echo tablecell("<a href='".PDF_DIR.$x_value . "' target='_blank'>$x_value</a>");
+      echo tablecell("<input type='file' name='$x' id='$x'>");
 			echo "</tr>\n";
 			break;
 		default:
@@ -303,61 +212,134 @@ if ($result->num_rows > 0) {
 		}
 
 	}
-	echo "</TABLE>";
-	echo "<input type='submit' name='submit' value='Submit Form'></form><br>";
+	echo "
+  </TABLE>
+  <input type='submit' name='submit' value='Update Patient'>
+  $msg
+</form><div style='height:60px;'></div>";
 }
 
-$conn->close();
-
+  $conn->close();
+  
+if ($_POST["selectedTable"]==TBL_PATIENTS){
+	$conn = ConnectDB();
+	$sql = "SELECT * FROM patient_files WHERE PatientID=" . $_POST["itemIndex"];
+	$result = $conn->query($sql);
+	//makes table of all files found prints a row for each record
+	if ($result->num_rows > 0) {
+    echo "<h3>Labs, Radiology, Misc Docs</h3>";
+		echo "<table class='drug_table'>";
+		echo "<tr><th>Documents</th><th></th></tr>";
+		while($row = $result->fetch_assoc()) {
+			echo "<tr>";
+			echo tablecell("<a href='patient_files/" . $row["FileName"] . "' target='_blank'>" . $row["Label"] . "</a>");
+      echo tablecell("<a href=delete.php?table=" . $_SESSION["selectedTable"] ."&id=" . $table[$r][$PrimaryKey] . ">Delete</a>");
+			echo "</tr>\n";
+		}
+		echo "</table>
+    <div style='height:60px;'></div>
+    <form>
+    <h5>Add Document</h5>
+    <input type='file' name='newDoc' id='newDoc'><br/>
+    <input type='submit' name='submit' value='Add Document'>
+    </form>";
+	}
+	$conn->close();
+}
+  echo "
+  </div>
+  <div></div>
+</div>";
 echo getTail();
 }
 
-function pageUpdateRow(){
+function delDocument(){
+  echo JSAlert("Deleted: ".$_POST["fileToDelete"]);
+  unlink($_POST["fileToDelete"]);
+}
+
+function UpdateRow(&$msg){
   //get the table row to be updated
+  $msg="updated!";
   $conn = ConnectDB();
   $sql = "SELECT * FROM ".$_POST["selectedTable"]." WHERE id=" . $_POST["itemIndex"];
   $result = $conn->query($sql);
-  if ($result->num_rows > 0) {
+  if ($result->num_rows > 0) 
+  {
     $TableRow = $result->fetch_assoc();
+  } 
+  else
+  {
+    echo "DATABASE ERROR";
+    exit();
   }
+  foreach($_FILES as $x =>$x_value){
+    //check for blank file submission for each pdf
+    //if so dont update the value 
+    
+    if (basename($_FILES[$x]["name"]) != '') // form sent no file, use what is in the database
+    {
+      $target_file = PDF_DIR . basename($_FILES[$x]["name"]);
+      $uploadOk = 1;
+      $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+      if(isset($_FILES[$x]["name"])) {
+        $check = getimagesize($_FILES[$x]["tmp_name"]);
+        $uploadOk = 1;
+        // Check file size
+        if ($_FILES[$x]["size"] > 500000) {
+          echo "Sorry, your file is too large.<br />";
+          $uploadOk = 0;
+        }
+        // Allow certain file formats
+        if($imageFileType != "jpg" && 
+          $imageFileType != "png" && 
+          $imageFileType != "jpeg" && 
+          $imageFileType != "pdf" ) 
+        {
+          echo "Sorry, only jpg, jpeg, png & pdf files are allowed.<br />";
+          $uploadOk = 0;
+        }
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 0) {
+          echo "Sorry, your file was not uploaded.<br />";
+        // if everything is ok, try to upload file
+        } else {
+          if (move_uploaded_file($_FILES[$x]["tmp_name"], $target_file)) {
+            $sqlfiles .=", " . $x . " = '" . basename($_FILES[$x]["name"]) ."'";
+            //echo "The file ". htmlspecialchars( basename( $_FILES[$x]["name"])). " has been uploaded.";
+            
+            //$file = fopen(PDF_DIR . $TableRow[$x],"w");
+            //fwrite($file,"Hello World. Testing!");
+            //fclose($file);
+            // Delete the old file
+            unlink(PDF_DIR . $TableRow[$x]);
+          } else {
+            echo "Sorry, there was an error uploading your file.";
+          }
+        }
+      }
+    }
+  }
+
   //beging consrtuing sql statment to update the record
 	$sql="UPDATE ".$_POST["selectedTable"] . " SET ";
 	$i=0;
  	foreach($_POST as $x =>$x_value){
-    //check for blank file submission for each pdf
-    //if so dont update the value 
-    switch($x){
-    case "MarFile":
-    case "HpFile":
-    case "OrdersFile":
-    case "ReportFile":
-      if ($x_value == ''){
-        $x_value = $TableRow[$x];
-      } else {
-        /*code to remove an old file if a new one is submitted
-         * will need code to upload here as well
-         * $file = fopen($_POST["file"],"w");
-  fwrite($file,"Hello World. Testing!");
-  fclose($file);
-  unlink($_POST["fileToDelete"]);*/
-      }
-      break;
-    }
-    
     if($i==0){
     } elseif ($i==count($_POST)-1){ //skip all these as they info about table and form
 		} elseif($i==1){
 		} elseif($i==2){
     } elseif($i==3){
     } elseif($i==4){
-                	$sql = $sql . $x . " = '" . $x_value ."' ";
+      $sql .= $x . " = '" . $x_value ."' ";
 		} else {
-                	$sql = $sql . ", " . $x . " = '" . $x_value ."'";
+      $sql .= ", " . $x . " = '" . $x_value ."'";
 		}
 		$i++;
   }
-	$sql=$sql . " WHERE id = " . $_POST["itemIndex"];
-	$result = $conn->query($sql);
+	$sql .= $sqlfiles . " WHERE id = " . $_POST["itemIndex"];
+
+  $result = $conn->query($sql);
 	$conn->close();
   //INSERT INTO `patients` (`id`, `FirstName`, `LastName`, `Barcode`, `DOB`, `Immortal`, `Provider`, `MarFile`, `HpFile`, `OrdersFile`, `ReportFile`) 
   //                VALUES (NULL, 'name', 'name', '5435943', '01/23/1059', 'a', 'Aldo Castaneda M.D.', 'blank.pdf', 'blank.pdf', 'blank.pdf', 'blank.pdf')

@@ -1,4 +1,5 @@
 <?PHP
+//from <html> to end of </head>
 function getHead($title,$lastworked,$extrahtml=""){
   $txthtml="
 <!DOCTYPE html>
@@ -26,7 +27,7 @@ Simulated Devices
   return htmlComment('head',$txthtml); 
 }
 
-
+//from <body> to end of top meneu of page, used on all pages
 function getTitle($subtitle){
   $titlehtml = "
 <body>
@@ -76,9 +77,7 @@ $titlehtml .= "
   
 }
 
-
-/* @return HTML for page footer
- */
+/* @return HTML for page footer*/
 function getTail(){
   $txthtml = "
   <div class='four-col-grid'>
@@ -88,19 +87,14 @@ function getTail(){
                                  or ask a staff member.<br>©2022 | All Rights Reserved | <a href='https://www.iosimulation.com'>iosimulation.com</a></p>
   </div>
   <div>";
-
 /* NEVER UNCOMMENT UNLESS DEBUGING!!!!! Major Security Threat
- *  
- * 
- * 
- *  
+ 
 foreach ($_SESSION as $key=>$val){
 echo $key." ".$val."<br/>";
 }
 */
-  
+ 
   $txthtml .="
-
 </body>
 </html>";
   return htmlComment('tail',$txthtml);
@@ -129,7 +123,8 @@ function randomString($strlength)
 		}
 		return $res;
 }
-  
+
+//various table tag wrapping
 function tablecell($celldata) {
 	return "<td>".$celldata."</td>";
 }
@@ -146,6 +141,7 @@ function html_heading($celldata,$size) {
   <h" . $size . ">".$celldata."</h" . $size  . ">";
 }
 
+//connects to the sudo_meds DB, used on most pages
 function ConnectDB(){
   $servername = "localhost";
   $username = "simlab";
@@ -161,6 +157,7 @@ function ConnectDB(){
   }
 }
 
+//validate admin creds
 function ValidateUser(){
   session_start();
   // if clearance is high enough and they have correctly enterd a pin proceed
