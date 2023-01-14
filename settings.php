@@ -187,7 +187,7 @@ if ($result->num_rows > 0) {
 	echo "</tr>
   ";
 	foreach($table[0] as $x =>$x_value){
-//switch based on column, if a file for patient is the column, use a dropdown box (input list)
+  //switch based on column, if a file for patient is the column, use a dropdown box (input list)
 		switch($x){
 		case "id":
 			echo "<tr>";
@@ -202,6 +202,12 @@ if ($result->num_rows > 0) {
 			echo tablecell($x.": ");
 			echo tablecell("<a href='".PDF_DIR.$x_value . "' target='_blank'>$x_value</a>");
       echo tablecell("<input type='file' name='$x' id='$x'>");
+			echo "</tr>\n";
+			break;
+    case "Pin":
+			echo "<tr>";
+			echo tablecell($x.": ");
+			echo tablecell("<input type='text' name='" . $x . "' value='" . $x_value . "'><br>");
 			echo "</tr>\n";
 			break;
 		default:
@@ -246,6 +252,7 @@ if ($_POST["selectedTable"]==TBL_PATIENTS){
 	}
 	$conn->close();
 }
+
   echo "
   </div>
   <div></div>
@@ -325,17 +332,21 @@ function UpdateRow(&$msg){
 	$sql="UPDATE ".$_POST["selectedTable"] . " SET ";
 	$i=0;
  	foreach($_POST as $x =>$x_value){
+    //echo $x . " - " . $x_value . "<br>";
+    if ($x == 'Pin'){
+      $x_value = hash('md5',$x_value);
+    } 
     if($i==0){
     } elseif ($i==count($_POST)-1){ //skip all these as they info about table and form
-		} elseif($i==1){
-		} elseif($i==2){
+    } elseif($i==1){
+    } elseif($i==2){
     } elseif($i==3){
     } elseif($i==4){
       $sql .= $x . " = '" . $x_value ."' ";
-		} else {
+    } else {
       $sql .= ", " . $x . " = '" . $x_value ."'";
-		}
-		$i++;
+    }
+    $i++;
   }
 	$sql .= $sqlfiles . " WHERE id = " . $_POST["itemIndex"];
 
