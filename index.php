@@ -93,7 +93,6 @@ if (isset($_POST['originForm'])){
     header("Location: patient.php");
     break;
   case FRM_PATIENT_CODE:
-    echo "Looking for patient...";
     if(isset($_POST["PatientBarcode"])) {
     $conn = ConnectDB();
     $unsafe_variable = $_POST["PatientBarcode"];
@@ -103,7 +102,6 @@ if (isset($_POST['originForm'])){
     $result = $conn->query($sql);
     //A patient has been found
     if ($result->num_rows > 0) {
-      echo "Found...</br>";
       // output data of each row
       while($row = $result->fetch_assoc()) {
         $_SESSION["PatientID"] = $row["id"];

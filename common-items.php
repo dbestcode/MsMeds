@@ -85,8 +85,7 @@ function getTail(){
   <div class='four-col-grid'>
   <div><!--Written by Nicholai Best, nicholai.best@gmail.com--></div>
   <div class='center-col'>
-    <p style='text-align:center'>For issues, please call the 'pharmacy' 
-                                 or ask a staff member.<br>©2022 | All Rights Reserved | <a href='https://www.iosimulation.com'>iosimulation.com</a></p>
+    <p style='text-align:center'>MsMeds v1.1 ©2023 All Rights Reserved | <a href='https://www.iosimulation.com'>iosimulation.com</a></p>
   </div>
   <div>";
 /* NEVER UNCOMMENT UNLESS DEBUGING!!!!! Major Security Threat
