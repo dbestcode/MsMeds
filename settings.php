@@ -222,9 +222,16 @@ function pageSelectItem(&$msg){
         echo "</tr>\n";
         break;
       case "Pin":
+      //hide the hash or password
         echo "<tr>";
         echo tablecell($x.": ");
-        echo tablecell("<input type='text' name='" . $x . "' value='" . $x_value . "'><br>");
+        echo tablecell("<input type='password' name='" . $x . "' value='" . $x_value . "'><br>");
+        echo "</tr>\n";
+        break;
+      case "AccessLevel":
+        echo "<tr>";
+        echo tablecell($x.": ");
+        echo tablecell("<input type='text' name='" . $x . "' value='" . $x_value . "' disabled><br>");
         echo "</tr>\n";
         break;
       default:
@@ -365,8 +372,8 @@ function UpdateRow(&$msg){
     exit();
   }
   
+  // only used if a patient is edited
   foreach($_FILES as $x =>$x_value){
-    // only used if a patient is edited
     // check for blank file submission for each pdf
     // if so dont update the value 
     
@@ -418,10 +425,11 @@ function UpdateRow(&$msg){
 	$sql="UPDATE ".$_POST["selectedTable"] . " SET ";
 	$i=0;
  	foreach($_POST as $x =>$x_value){
-    //echo $x . " - " . $x_value . "<br>";
+    // Password can be updated
+    // if it doesnt equal the current hash, rehash sent data and store hash.
     if ($x == 'Pin'){
       if ($TableRow['Pin'] != $x_value){
-      $x_value = hash('md5',$x_value);  
+        $x_value = hash('md5',$x_value);  
       }
     } 
     if($i==0){

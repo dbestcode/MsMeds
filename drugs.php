@@ -1,4 +1,8 @@
 <?php 
+define('LAST_WORK','1/17/2023'); //< --- @date
+define('PAGE_TITLE','Ms.Meds - EHR');
+define('PROJECT_VERSION','1.1');
+
 session_start();
 /*if (isset($_SESSION["UserID"]) && isset($_SESSION["AuthPass"]) && ($_SESSION["AccessLevel"]!=1)) {
 } else {
@@ -7,30 +11,20 @@ session_start();
 
 ini_set('display_errors', '1');
 error_reporting(E_ALL);
-function tablecell($celldata) {
-        return "<td>".$celldata."</td>";
-}
 
-function tablerow($celldata) {
-        return "<tr>".$celldata."</tr>";
-}
+require_once('./common-items.php');
 
 require_once('./php/head.php');
-?>
-<!DOCTYPE html>
-<html>
-<head>
-<?php 
-        print_head("default");
-?>
-<meta http-equiv="refresh" content="5" >
-</head>
-<body>
 
-<?php	// Create connection &	// Check connection
-require "php/title.php";
+$extra ="<meta http-equiv='refresh' content='5' >";
+echo getHead('Drug Administrations',LAST_WORK,$extra);
+  echo getTitle('Drug Administrations');
+
+
+
+
 echo "<a href='index.php'>Home</a>";
-include "conn.php";
+$conn = ConnectDB();
 //--load drug_admins from database into array 'medorders'
 $sql = "SELECT patients.LastName, patients.FirstName ,drug_admins.UserInitals, drug_admins.DrugName, drug_admins.AdminTime,drug_admins.RealTime FROM drug_admins  INNER JOIN patients ON drug_admins.PatientID = patients.id ORDER BY drug_admins.RealTime DESC";
 $result = $conn->query($sql);
