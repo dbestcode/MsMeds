@@ -181,7 +181,7 @@ function JSAlert($msg){
 
 function printDebug($debugOn,$altContent=''){
   if($debugOn){
-    echo "DEBUG ON<br/>";
+    echo "<br/>:-DEBUG-:<br/>";
     if ($altContent == ''){
       echo '<H3>POST:</H3>';
       foreach($_POST as $x =>$x_value){
@@ -197,3 +197,4 @@ function printDebug($debugOn,$altContent=''){
   }
 }
 ?>
+

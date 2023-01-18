@@ -169,7 +169,7 @@ function pageMainMenu(){
 <div class='centre'>
   
   <form action=".htmlspecialchars($_SERVER['PHP_SELF'])." method='post'>
-    <input type='hidden' name='originForm' value='".FRM_VIEW_TABLE."'><br />
+    <input type='hidden' name='originForm' value='".FRM_VIEW_TABLE."'>
     <button class = 'abutton' type='submit' id='apatients' name='selectedTable' value='".TBL_PATIENTS."' style='width:150px;'>Patients</button><br />
     <button class = 'abutton' type='submit' id='adrugs' name='selectedTable' value='".TBL_DRUGS."' style='width:150px;'>Medications</button><br />
     <button class = 'abutton' type='submit' id='ausers' name='selectedTable' value='".TBL_USERS."' style='width:150px;'>Users</button><br />";
