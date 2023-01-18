@@ -53,7 +53,7 @@ if (isset($_POST['originForm'])){
     exit;
     break;
   case FRM_SELECT_ITEM:
-  // View a single record in a datatable
+  // View a single record in a datatable OR Delete
     pageSelectItem($updatemessage);
     exit;
     break;
@@ -61,10 +61,6 @@ if (isset($_POST['originForm'])){
   // alter a record in a datatable
     UpdateRow($updatemessage);
     pageSelectItem($updatemessage);
-    exit;
-    break;
-  case FRM_DEL_ITEM:
-  // What am I?
     exit;
     break;
   case FRM_NEW_ITEM:
@@ -92,15 +88,7 @@ else
 
 // Display a table
 function pageViewTable(){
-  
-  if(isset($_POST['deleteitem'])) {
-          echo "delete: " . $_POST['deleteitem'];
-    $_SESSION['deleteitem']=$_POST['deleteitem'];
-    header("Location: delete.php");
-  }
-
   echo getHead('','').getTitle('');
-
   $conn = ConnectDB();
   // sort based on the table selected, YES this could be single statement
   // BUT each table need a different sort... so why !?
@@ -137,7 +125,7 @@ function pageViewTable(){
       }
     }
     
-    echo "<th>EDIT</th>";
+    echo "<th>EDIT</th><th>EDIT</th>";
 
     echo "<form action='".$_SERVER['PHP_SELF']."' method='post'>
     <input type='hidden' name='originForm' value='".FRM_SELECT_ITEM."'>
@@ -148,6 +136,7 @@ function pageViewTable(){
         echo tablecell($x_value);
       }
       echo tablecell("<button type='submit' name='itemIndex' value='" . $table[$r][$PrimaryKey] . "' >edit</button>");
+      echo tablecell("<button type='submit' name='deleteIndex' value='" . $table[$r][$PrimaryKey] . "' >delete</button>");
       //echo tablecell("<button type='submit' name='deleteitem' value='" . $table[$r][$PrimaryKey] . "' >delete</button>");
       //echo tablecell("<a href=edit.php?table=" . $_SESSION["selectedTable"] ."&id=" . $table[$r][$PrimaryKey] . ">Edit</a>");
       //echo tablecell("<a href=delete.php?table=" . $_SESSION["selectedTable"] ."&id=" . $table[$r][$PrimaryKey] . ">Delete</a>");
@@ -183,9 +172,23 @@ function pageMainMenu(){
 }
 
 function pageSelectItem(&$msg){
-
+  // Delete item and open table
+  if(isset($_POST['deleteIndex'])) {
+    $conn = ConnectDB();
+    $sql = "DELETE FROM " . $_POST["selectedTable"] . " WHERE id=" . $_POST["deleteIndex"];
+    $result = $conn->query($sql);
+    $conn->close();
+    pageViewTable();
+    exit();
+  }
+  
   echo getHead('Settings',LAST_WORK,'').getTitle('');
   echo "
+  <div><form method='post' action=". htmlspecialchars($_SERVER['PHP_SELF']) . " enctype='multipart/form-data'>
+  <input type='hidden' name='originForm' value='".FRM_VIEW_TABLE."'>
+  <input type='hidden' name='selectedTable' value='".$_POST['selectedTable']."'>
+  <button type='submit'>BACK</button>
+  </form></div>
   <div class='middle-col-grid'>
     <div></div>
     <div>";

@@ -21,7 +21,7 @@ define('FRM_NEW_CASE',3); // Patient armabdn scanned
 define('FRM_ADD_USER','4');
 
 
-define('DEBUG_ON','1');
+define('DEBUG_ON','0');
 
 require_once('common-items.php');
 session_start();
