@@ -1,5 +1,7 @@
 <?PHP
-//from <html> to end of </head>
+/* @desc basically 'functions.php
+ * common functions which are used on many pages
+ */
 function getHead($title,$lastworked,$extrahtml=""){
   $txthtml="
 <!DOCTYPE html>
@@ -173,5 +175,9 @@ function ValidateUser(){
     echo "USER NOT AUTHORIZED";
     header("Location: logout.php");
   }
+}
+
+function JSAlert($msg){
+  return "<script>alert('".$msg."');</script>";
 }
 ?>
