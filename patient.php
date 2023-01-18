@@ -1,8 +1,8 @@
 <?php
-/* File:	patient.php
- * Author:	nbest
- * Date:	11/22
- * Desc:	Main patient viewing page, functions at top for various html printing
+/* @file	patient.php
+ * @author	nicholai.best@gmail.com
+ * @date	see below
+ * @desc	Main patient viewing page, functions at top for various html printing
  * 			
  */
 define('LAST_WORK','1/9/2023'); //< --- @date
@@ -115,9 +115,9 @@ function select_notes(){
  */
 function printdefaultnote($filename){
 	if (file_exists($filename)) {
-	$myfile = fopen($filename, "r") or die("Patient has no notes.");
-	echo fread($myfile,filesize($filename));
-	fclose($myfile);
+		$myfile = fopen($filename, "r") or die("Patient has no notes.");
+		echo fread($myfile,filesize($filename));
+		fclose($myfile);
 	}
 }
 

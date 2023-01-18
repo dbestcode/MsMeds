@@ -161,7 +161,6 @@ function ConnectDB(){
 
 //validate admin creds
 function ValidateUser(){
-  session_start();
   // if clearance is high enough and they have correctly enterd a pin proceed
   // other wise settings pages do not display
   if ($_SESSION["AuthPass"]=54792390) {
@@ -179,5 +178,23 @@ function ValidateUser(){
 
 function JSAlert($msg){
   return "<script>alert('".$msg."');</script>";
+}
+
+function printDebug($debugOn,$altContent=''){
+  if($debugOn){
+    echo "DEBUG ON<br/>";
+    if ($altContent == ''){
+      echo '<H3>POST:</H3>';
+      foreach($_POST as $x =>$x_value){
+        echo $x . " - " . $x_value . "<br>";
+      }
+      echo '<H3>SESSION:</H3>';
+      foreach($_SESSION as $x =>$x_value){
+        echo $x . " - " . $x_value . "<br>";
+      }    
+    } else {
+      echo $altContent;
+    }
+  }
 }
 ?>

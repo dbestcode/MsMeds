@@ -26,6 +26,8 @@ define('TBL_DRUGS','drugs');
 define('TBL_IO_REPORT','io_report');
 define('TBL_PATIENT_FILES','patient_files');
 
+define('DEBUG_ON','0');
+
 /* Basically any generic function 
  * 
  * getHead
@@ -35,7 +37,12 @@ define('TBL_PATIENT_FILES','patient_files');
  * ConnectDB
  */
 require_once('./common-items.php');
+session_start();
+printDebug(DEBUG_ON);
+
+
 ValidateUser();
+
 
 $updatemessage = '';
 if (isset($_POST['originForm'])){
@@ -162,7 +169,6 @@ function pageMainMenu(){
 <div class='centre'>
   
   <form action=".htmlspecialchars($_SERVER['PHP_SELF'])." method='post'>
-  <h3>Edit Table</h3>
     <input type='hidden' name='originForm' value='".FRM_VIEW_TABLE."'><br />
     <button class = 'abutton' type='submit' id='apatients' name='selectedTable' value='".TBL_PATIENTS."' style='width:150px;'>Patients</button><br />
     <button class = 'abutton' type='submit' id='adrugs' name='selectedTable' value='".TBL_DRUGS."' style='width:150px;'>Medications</button><br />
@@ -170,7 +176,9 @@ function pageMainMenu(){
     //<button class = 'abutton' type='submit' id='aor_report' name='selectedTable' value='".TBL_IO_REPORT."'>OR Reports</button><br />
     echo"
     </form>
-</div>";
+    <hr>
+    <a href='../phpmyadmin'><h4>phpMyAdmin</h4></a>(Advanced settings)
+</div><hr/>";
   echo getTail();
 }
 
@@ -297,11 +305,6 @@ function pageSelectItem(&$msg){
 }
 
 function newDocument(&$msg){
-  echo 'Post:<br>';
-  foreach($_POST as $x =>$x_value){
-    echo $x . " - " . $x_value . "<br>";
-  }
- 
   if (basename($_FILES["newDoc"]["name"]) != '') // form sent no file, use what is in the database
   {
     $target_file = PDF_DIR . basename($_FILES["newDoc"]["name"]);
@@ -386,7 +389,7 @@ function UpdateRow(&$msg){
         $check = getimagesize($_FILES[$x]["tmp_name"]);
         $uploadOk = 1;
         // Check file size
-        if ($_FILES[$x]["size"] > 500000) {
+        if ($_FILES[$x]["size"] > 1000000) {
           echo "Sorry, your file is too large.<br />";
           $uploadOk = 0;
         }

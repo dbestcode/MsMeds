@@ -17,11 +17,17 @@ define('AUTH_CODE','54792390');
 define('FRM_USER_ID',0);      // User ID Scaned, login
 define('FRM_PIN',1);          // Passwrod entered
 define('FRM_PATIENT_CODE',2); // Patient armabdn scanned
+define('FRM_NEW_CASE',3); // Patient armabdn scanned
+
+
+define('DEBUG_ON','0');
 
 require_once('common-items.php');
 session_start();
 ini_set('display_errors', '1');
 error_reporting(E_ALL);
+
+printDebug(DEBUG_ON);
 
 if (isset($_POST['originForm'])){
   switch ($_POST['originForm']) {
@@ -50,10 +56,10 @@ if (isset($_POST['originForm'])){
       exit;
     }
     $conn->close();
-    pageMain();
+    pageMain(getLoginFrm());
     break;
   case FRM_PIN:
-  echo 'pin';
+    echo 'pin';
     if(isset($_SESSION["uPin"]) && isset($_POST["apin"])) {
       if (hash('md5',$_POST["apin"]) == $_SESSION["uPin"]){
         echo "<h1>Access Granted.</h1>";
@@ -69,7 +75,6 @@ if (isset($_POST['originForm'])){
         echo "<H1>PIN INVALID</H1>";
         exit;
       }
-
       //if ($_SESSION["AccessLevel"] == 3){
       //  header("Location: admin.php");
       //} else {
@@ -79,10 +84,17 @@ if (isset($_POST['originForm'])){
     }
     exit;
     break;
+  case FRM_NEW_CASE:
+    $conn = ConnectDB();
+    $sql = "DELETE FROM drug_admins WHERE PatientID=" . $_POST["PatientID"];
+    $result = $conn->query($sql);
+    $sql = "DELETE FROM nurse_notes WHERE PatientID=" . $_POST["PatientID"];
+    $result = $conn->query($sql);
+    header("Location: patient.php");
+    break;
   case FRM_PATIENT_CODE:
     echo "Looking for patient...";
     if(isset($_POST["PatientBarcode"])) {
-
     $conn = ConnectDB();
     $unsafe_variable = $_POST["PatientBarcode"];
     $safe_variable = mysqli_real_escape_string($conn,$unsafe_variable);
@@ -106,36 +118,51 @@ if (isset($_POST['originForm'])){
         $_SESSION["ReportFile"] = $row["ReportFile"];
         $_SESSION["HpFile"] = $row["HpFile"];
       }
-      
-      // check for immortal patient where students cannot remove their info once entered
-      /* UNDERUTILIZED, CURRENTLY DIABLED
-       * DATABASE DOESNT HAVE THIS FEILD BY DEFAULT
-      $sql = "SELECT `Immortal` FROM `patients` WHERE `id`=" . $_SESSION["PatientID"];
-      $immortal = $conn->query($sql);
-      while($row = $immortal->fetch_assoc()) {
-        if($row['Immortal']=='1'){
-          if ($_SESSION["AccessLevel"] == 7){
-            header("Location: oper.php");
-          } else{
-            header("Location: patient.php");
-          }
-        }
-      }*/
+      printDebug(DEBUG_ON,$_SESSION["PatientID"]);
+      //header("Location: opencase.php");
       
       // checking for current records(meds or notes), if found redirect to 'opencase.php' for option to delete
       $sql = "SELECT * FROM `drug_admins` WHERE PatientID=" . $_SESSION["PatientID"];
       $resultone = $conn->query($sql);
       $sql = "SELECT * FROM `nurse_notes` WHERE PatientID=" . $_SESSION["PatientID"];
       $resulttwo = $conn->query($sql);
-      if (($resultone->num_rows > 0)||($resulttwo->num_rows > 0)) {
-        header("Location: opencase.php");
+
+      if (($resultone->num_rows > 0)||($resulttwo->num_rows > 0)) 
+      {
+        //header("Location: opencase.php");
+        //-------------------------------------------
+        
+        
+        $htmlnewcase = "<h2>Simulation in progress</h2>". 
+        $_SESSION["pFirstName"] . " " . $_SESSION["pLastName"] . " " . $_SESSION["pDOB"] . "		
+        has a session open.<br>
+        <a href='patient.php' style='
+        background-color: #20285b;
+        display:inline-block;
+        color: white;
+        padding: 16px 16px;
+        text-decoration: none;
+        text-align:center;
+        width: 150px;'>Continue Case?</a>
+        <form method='post' action='".htmlspecialchars($_SERVER['PHP_SELF'])."'>
+        <input name='originForm' type='hidden' value='".FRM_NEW_CASE."'>
+        <input type='hidden' name='PatientID' value='".htmlspecialchars($_SESSION['PatientID'])."'><br>
+        <input type='submit' name='submit' value='Start New Case?'><br>
+        </form>
+        <br/><strong>NOTE: 'Start New Case' will clear all progress.</strong><br>";
+        pageMain($htmlnewcase);
+      } 
+      else 
+      {
+        header("Location: patient.php");
+        exit;
       }
-      header("Location: opencase.php");
-      if ($_SESSION["AccessLevel"] == 7){
+
+      /*if ($_SESSION["AccessLevel"] == 7){
         header("Location: oper.php");
       } else {
         header("Location: patient.php");
-      }
+      }*/
     } else {
       echo "Not found!";
     }
@@ -146,7 +173,7 @@ if (isset($_POST['originForm'])){
 } 
 else
 {
-  pageMain();
+  pageMain(getLoginFrm());
 }
 
 
@@ -178,8 +205,9 @@ function getLoginFrm(){
     <br><h2>Welcome " . $_SESSION["uFirstName"] . "!</h2>
 		<p>Enter your PIN
 		<br><form action='".$_SERVER['PHP_SELF']."' method='post'>
+    <input name='originForm' type='hidden' value='".FRM_PIN."'>
     <input type='password' name='apin' autofocus>
-    <input name='originForm' type='hidden' value='".FRM_PIN."'></form>
+    </form>
 		or <a href='logout.php'>return to login</a>";
 	/* No session variables of consiquence are set prompt for user name
 	 * post:barcode
@@ -196,9 +224,8 @@ function getLoginFrm(){
   return $htmlpage;
 }
 
-function pageMain(){
+function pageMain($htmlcontent){
 
-  
 
   $validscript ="
     <script>
@@ -214,9 +241,7 @@ function pageMain(){
   <div id='ccontainer' class='container' style='height:400px'>
     <div class='vhcenter' style='text-align:center'>
       <img src='img/logo.png' width='150'>".
-    
-     getLoginFrm()."
-     
+     $htmlcontent."
     </div>
   </div>";
   echo getTail();
