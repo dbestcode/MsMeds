@@ -47,7 +47,7 @@ if (isset($_POST['originForm'])){
     break;
   case FRM_SELECT_ITEM:
   // View a single record in a datatable
-    pageSelectItem();
+    pageSelectItem($updatemessage);
     exit;
     break;
   case FRM_UPDATE_ITEM:
@@ -153,7 +153,7 @@ function pageViewTable(){
   $conn->close();
   echo getTail();
 }
-///		header("Location: additem.php");
+
 
 function pageMainMenu(){
   echo getHead('Settings',LAST_WORK,'');

@@ -97,8 +97,8 @@ function select_notes(){
 			echo "</tr>";
 			echo tablerow(tablecell("HR:<br>" . $row["HR"]) .	tablecell("RR:<br>" . $row["RR"])) ;
 			echo tablerow(tablecell("BP:<br>" . $row["Bp"]) .	tablecell("SpO<sub>2</sub><br>" . $row["Spo"])) ;
-			echo tablerow("<td colspan='4'><p id='notep' style='overflow-wrap:break-word;'><pre>" . $row["Note"] 
-			. "</pre></td>");
+			echo tablerow("<td colspan='4'><p id='notep' style='white-space: pre-wrap;'>" . $row["Note"] 
+			. "</td>");
 		}
 		echo "</table>";
 	//empty if none found
