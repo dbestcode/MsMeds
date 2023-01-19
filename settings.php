@@ -7,6 +7,7 @@ define('PAGE_TITLE','Ms.Meds - EHR');
 define('PROJECT_VERSION','1.1');
 
 define('PDF_DIR','./patient_files/');
+define('DOCS_DIR','./docs/');
 
 // Values for $_POST['originForm']
 // Used for detemining what data is being sent
@@ -83,13 +84,15 @@ if (isset($_POST['originForm'])){
     break;
   case FRM_INSERT_RECORD:
     InsertRow($_POST['selectedTable']);
-    pageMain();
+    pageViewTable();
+    //pageMain();
     break;
   }
 } 
 else
 {
-  pageMain();
+  
+  pageMain('',htmlSampleDocs());
 }
 
 // Display a table
@@ -136,7 +139,7 @@ function pageViewTable(){
       }
     }
     
-    echo "<th>EDIT</th><th>EDIT</th>";
+    echo "<th>EDIT</th><th>DELETE</th>";
 
     echo "<form action='".$_SERVER['PHP_SELF']."' method='post'>
     <input type='hidden' name='originForm' value='".FRM_SELECT_RECORD."'>
@@ -149,9 +152,6 @@ function pageViewTable(){
       }
       echo tablecell("<button type='submit' name='itemIndex' value='" . $table[$r][$PrimaryKey] . "' >edit</button>");
       echo tablecell("<button type='submit' name='deleteIndex' value='" . $table[$r][$PrimaryKey] . "' >delete</button>");
-      //echo tablecell("<button type='submit' name='deleteitem' value='" . $table[$r][$PrimaryKey] . "' >delete</button>");
-      //echo tablecell("<a href=edit.php?table=" . $_SESSION["selectedTable"] ."&id=" . $table[$r][$PrimaryKey] . ">Edit</a>");
-      //echo tablecell("<a href=delete.php?table=" . $_SESSION["selectedTable"] ."&id=" . $table[$r][$PrimaryKey] . ">Delete</a>");
       echo "</tr>";
     }
     echo "</form></TABLE>";
@@ -165,7 +165,7 @@ function pageViewTable(){
 /* Display header and footer, Menu unless 
  * $content has value then what html is in it
  */
-function pageMain($content = ''){
+function pageMain($content = '',$docs=''){
   echo getHead('Settings',LAST_WORK,'');
   echo getTitle('Admin Portal');
   echo "
@@ -181,17 +181,18 @@ function pageMain($content = ''){
     echo"
     </form>
     <hr>
-    <a href='../phpmyadmin'><h4>phpMyAdmin</h4></a>(Advanced settings)";
+    <a href='../phpmyadmin'><h3>phpMyAdmin</h3></a>(Advanced settings)";
     } else {
       echo htmlComment('page content',$content);
     }
   echo "
+  <hr><h3>Premade Documents</h3>$docs
   </div>
 <hr/>";
   echo getTail();
 }
 
-
+// Page to view a single record
 function pageSelectItem(&$msg){
   // Delete item and open table
   if(isset($_POST['deleteIndex'])) {
@@ -300,6 +301,7 @@ function pageSelectItem(&$msg){
     while($row = $result->fetch_assoc()) {
       echo "<tr>";
       echo tablecell("<a href='patient_files/" . $row["FileName"] . "' target='_blank'>" . $row["Label"] . "</a>");
+      echo "<input type='hidden' name='fileName' value=".$row["Label"]."><br>";
       echo tablecell("<button type='submit' name='fileIndex' value='" . $row['id'] . "' >DELETE</button>");
       echo "</tr>\n";
     }
@@ -328,7 +330,7 @@ function pageSelectItem(&$msg){
   echo getTail();
 }
 
-
+// uploads a misc document
 function newDocument(&$msg){
   if (basename($_FILES["newDoc"]["name"]) != '') // form sent no file, use what is in the database
   {
@@ -338,25 +340,20 @@ function newDocument(&$msg){
   
     $check = getimagesize($_FILES[$x]["tmp_name"]);
     $uploadOk = 1;
-    // Check file size
-    if ($_FILES["newDoc"]["size"] > 500000) {
+    // Check file size & file type
+    if ($_FILES["newDoc"]["size"] > 500000) 
+    {
       $msg = "Sorry, your file is too large.<br />";
-      $uploadOk = 0;
     }
-    // Allow certain file formats
-    if($imageFileType != "jpg" && 
+    elseif($imageFileType != "jpg" && 
       $imageFileType != "png" && 
       $imageFileType != "jpeg" && 
       $imageFileType != "pdf" ) 
     {
       $msg = "Sorry, only jpg, jpeg, png & pdf files are allowed.<br />";
-      $uploadOk = 0;
-    }
-    // Check if $uploadOk is set to 0 by an error
-    if ($uploadOk == 0) {
-      $msg = "Sorry, your file was not uploaded.<br />";
-    // if everything is ok, try to upload file
-    } else {
+    } 
+    else 
+    {
       if (move_uploaded_file($_FILES["newDoc"]["tmp_name"], $target_file)) {
         $msg = htmlspecialchars(basename( $_FILES["newDoc"]["name"])). " has been uploaded.";
         $conn = ConnectDB();
@@ -373,11 +370,12 @@ function newDocument(&$msg){
 }
 
 
-function delDocument($fileIndex, &$msg){
+function delDocument(&$msg){
+  $conn = ConnectDB();
   $sql = "DELETE FROM ".TBL_PATIENT_FILES." WHERE id=" . $_POST["fileIndex"];
   $result = $conn->query($sql);
   $conn->close();
-  unlink(PDF_DIR . $row['FileName']);
+  unlink(PDF_DIR . $_POST['fileName']);
   $msg = JSAlert("Deleted: ".$row['FileName']);
 }
 
@@ -571,4 +569,15 @@ function htmlAddItem($tablename){
   $conn->close();
   return $html;
 }
+
+function htmlSampleDocs(){
+  $html = '';
+  $dirContents = array_diff(scandir(DOCS_DIR), array('..', '.'));
+  //load two arrays with file names striped of '.pdf' and path two file
+  foreach ($dirContents as $x){
+    $html .= "<a href='".DOCS_DIR."$x'>$x</a><br>";
+  }
+  return $html;
+}
+
 ?>

@@ -54,8 +54,17 @@ table{
 }
 h1 {
   text-align: center;
+  
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+font-family: 'Press Start 2P';
+}
 #header
 {
 	padding:5px;
@@ -225,6 +234,7 @@ input[type=button], input[type=submit], input[type=reset] {
 	transform:translate(-50%, -50%);
 }
 .retro-font{  font-family: 'Press Start 2P';}
+
 .warning{color:red;font-weight: 700;}
 
 .top-nav-font {
