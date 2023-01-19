@@ -137,10 +137,6 @@ function tablehead($celldata) {
 	return "
   <th>".$celldata."</th>";
 }
-function html_heading($celldata,$size) {
-	return "
-  <h" . $size . ">".$celldata."</h" . $size  . ">";
-}
 
 //connects to the sudo_meds DB, used on most pages
 function ConnectDB(){
