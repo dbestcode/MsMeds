@@ -65,8 +65,6 @@ else
   pageMain(htmlLoginForm());
 }
 
-
-
 function htmlLoginForm(){
 /* called middle of page
  * Produces content based on current login status
@@ -114,8 +112,6 @@ function htmlLoginForm(){
 }
 
 function pageMain($htmlcontent){
-
-
   $validscript ="
     <script>
     function validateForm() {
@@ -210,11 +206,12 @@ function pageOpenPatient(){
     }
 }
 
-function CheckUserID($unsafe_variable){
+// check userId against database, 
+function CheckUserID($barcode){
   $conn = ConnectDB();
-  $safe_variable = mysqli_real_escape_string($conn,$unsafe_variable);
+  $safe_variable = mysqli_real_escape_string($conn,$barcode);
   //open record with barcode scanned
-  $sql = "SELECT id,FirstName,LastName,Barcode,AccessLevel,Pin FROM `users` WHERE Barcode='$safe_variable'";
+  $sql = "SELECT id,FirstName,LastName,Barcode,AccessLevel,Pin FROM `users` WHERE Barcode='$barcode'";
   $result = $conn->query($sql);
   if ($result->num_rows > 0) {
     // output data of each row
@@ -234,27 +231,30 @@ function CheckUserID($unsafe_variable){
   $conn->close();
 }
 
+// Check password/pin and redirects base on correctness
 function CheckPassword(){
   if(isset($_SESSION["PinHash"]) && isset($_POST["UnHashPin"])) {
-      if (hash('md5',$_POST["UnHashPin"]) == $_SESSION["PinHash"]){
-        echo "<h1>Access Granted.</h1>";
-        //echo hash('md5',$_POST["UnHashPin"]);
-        $_SESSION["AuthPass"]=AUTH_CODE;
-        unset($_SESSION["PinHash"]);
-      } elseif (empty($_SESSION["PinHash"])) {
-        echo "<h1>Account has no pin.<br>Access Granted.</h1>";
-        //echo hash('md5',$_POST["UnHashPin"]);
-        $_SESSION["AuthPass"]=AUTH_CODE;
-        unset($_SESSION["PinHash"]);
-      } else {
-        echo "<H1>PIN INVALID</H1>";
-        exit;
-      }
-      if ($_SESSION["AccessLevel"] == 3){
-        header("Location: settings.php");
-      } else {
-        header("Location: index.php");
-      }
+    if (hash('md5',$_POST["UnHashPin"]) == $_SESSION["PinHash"]){
+      echo "<h1>Access Granted.</h1>";
+      //echo hash('md5',$_POST["UnHashPin"]);
+      $_SESSION["AuthPass"]=AUTH_CODE;
+      unset($_SESSION["PinHash"]);
+    } elseif (empty($_SESSION["PinHash"])) {
+      echo "<h1>Account has no pin.<br>Access Granted.</h1>";
+      //echo hash('md5',$_POST["UnHashPin"]);
+      $_SESSION["AuthPass"]=AUTH_CODE;
+      unset($_SESSION["PinHash"]);
+    } else {
+      echo "
+      <H1>PIN INVALID</H1>
+      <meta http-equiv='refresh' content='2;url=index.php'>";
+      exit;
+    }
+    if ($_SESSION["AccessLevel"] == 3){
+      header("Location: settings.php");
+    } else {
+      header("Location: index.php");
+    }
   } 
 }
 
@@ -305,7 +305,8 @@ function insertUser(){
 	}
 	echo "<meta http-equiv='refresh' content='2;url=index.php'>";
 }
-// html 
+
+// @return html for the add user form
 function htmlAddUserForm($barcode){
   $html = "
   <script>

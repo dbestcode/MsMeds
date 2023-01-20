@@ -369,7 +369,7 @@ function newDocument(&$msg){
   }
 }
 
-
+//Delete misc patient documents
 function delDocument(&$msg){
   $conn = ConnectDB();
   $sql = "DELETE FROM ".TBL_PATIENT_FILES." WHERE id=" . $_POST["fileIndex"];
@@ -379,7 +379,7 @@ function delDocument(&$msg){
   $msg = JSAlert("Deleted: ".$row['FileName']);
 }
 
-
+// update a row in a table, used for multple tables
 function UpdateRow(&$msg){
   //get the table row to be updated
   $msg="updated!";
@@ -395,12 +395,10 @@ function UpdateRow(&$msg){
     echo "DATABASE ERROR";
     exit();
   }
-  
-  // only used if a patient is edited
+  // if a patient is edited, no other records have $_FILES
   foreach($_FILES as $x =>$x_value){
-    // check for blank file submission for each pdf
-    // if so dont update the value 
-    
+    // Check for blank file submission for each pdf
+    // If so dont update the value 
     if (basename($_FILES[$x]["name"]) != '') // form sent no file, use what is in the database
     {
       $target_file = PDF_DIR . basename($_FILES[$x]["name"]);
@@ -480,6 +478,7 @@ function UpdateRow(&$msg){
 }
 
 // Inserts a new row into the database
+// @param the table to be added to
 function InsertRow($tablename){
   $sql="INSERT INTO $tablename";
 	$i=0;
@@ -570,6 +569,7 @@ function htmlAddItem($tablename){
   return $html;
 }
 
+// @returns html list of docsuments admin might need
 function htmlSampleDocs(){
   $html = '';
   $dirContents = array_diff(scandir(DOCS_DIR), array('..', '.'));
