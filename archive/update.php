@@ -22,7 +22,7 @@ $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
  * @file functions.php
  * @includes getHead(title,last work date),getTitle(subheading),getTail
  */
-require("functions.php");
+require("common-items.php");
 
 /*
 //basic debug lines

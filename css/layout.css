@@ -54,8 +54,17 @@ table{
 }
 h1 {
   text-align: center;
+  
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+font-family: 'Press Start 2P';
+}
 #header
 {
 	padding:5px;
@@ -79,6 +88,7 @@ h1 {
 	width:60%;
 	background-color:#20285b;
 }
+
 #content{
 	background-color:#ffffff;
 	padding:2px;
@@ -112,7 +122,6 @@ float:left;
 	padding: 16px 16px;
 	text-decoration: none;
 	text-align:center;
-/*	width: 150px;*/
 }
 /*
 a:link,a:visited{
@@ -130,13 +139,16 @@ color:black;
 }
 a.middle{
 	vertical-align: middle;
-}
+} grid.css
 */
 
 a:hover,a:active{
 background-color:#c0c0c0;
 color:black;
 }
+a{background-color:transparent;-webkit-text-decoration-skip:objects}
+a:active,a:hover{outline-width:0}
+a{color:inherit}
 
 p{
 word-wrap:break-word;
@@ -149,7 +161,7 @@ input[type=button], input[type=submit], input[type=reset] {
   background-color: #fa661c;
   border: none;
   color: white;
-  padding: 16px 32px;
+  padding: 8px 16px;
   text-decoration: none;
   margin: 4px 2px;
   cursor: pointer;
@@ -175,7 +187,25 @@ input[type=button], input[type=submit], input[type=reset] {
   background-color: #fa661c;
   color: white;
 }
-
+/* Style the tab content */
+	.tabcontent {
+	  display: none;
+	  padding: 6px 12px;
+	  border: 1px solid #ccc;
+	  border-top: none;
+	 -webkit-animation: fadeEffect 1s;
+	 animation: fadeEffect 1s;
+	}
+	
+	@-webkit-keyframes fadeEffect{
+	 from {opacity: 0;}
+	 to {opacity:1 ;}
+	}
+	@keyframes fadeEffect{
+	 from {opacity: 0;}
+	 to {opacity:1 ;}
+	}
+  
 .center-col{
   grid-column:2/4;
 }
@@ -186,6 +216,10 @@ input[type=button], input[type=submit], input[type=reset] {
 .three-col-grid {
   display:grid;
   grid-template-columns: 1fr 1fr 1fr;
+}
+.middle-col-grid{
+  display:grid;
+  grid-template-columns: 1fr 2fr 1fr;
 }
 .two-col-grid {
   display:grid;
@@ -199,3 +233,62 @@ input[type=button], input[type=submit], input[type=reset] {
 	-ms-transform:translateY(-50%, -50%);
 	transform:translate(-50%, -50%);
 }
+.retro-font{  font-family: 'Press Start 2P';}
+
+.warning{color:red;font-weight: 700;}
+
+.top-nav-font {
+font-family: "Lucida Console", Monaco, monospace;
+font-size: 1em;
+word-spacing: 2px;
+
+font-weight: normal;
+text-decoration: none;
+font-style: normal;
+font-variant: normal;
+text-transform: none;
+}
+.centre{text-align:center}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  gap: 5px;
+  background-color: #003366;
+  padding: 5px;
+}
+
+.grid-container > div {
+  background-color: rgba(255, 255, 255, 01);
+  border: 1px solid black;
+}
+
+
+/* Style the tab */
+	.pt-menu {
+	  overflow: hidden;
+	  border: 1px solid #ccc;
+	  background-color: #f1f1f1;
+	}
+
+	/* Style the buttons inside the tab */
+	.pt-menu button {
+	  background-color: inherit;
+	  float: left;
+	  border: none;
+	  outline: none;
+	  cursor: pointer;
+	  padding: 14px 16px;
+	  transition: 0.3s;
+	  font-size: 17px;
+	}
+
+	/* Change background color of buttons on hover */
+	.pt-menu button:hover {
+	  background-color: #ddd;
+	}
+
+	/* Create an active/current tablink class */
+	.pt-menu button.active {
+	  background-color: #ccc;
+	}
