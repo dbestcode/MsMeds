@@ -34,7 +34,7 @@ It is **recommended** that Ms.Meds is setup by an IT person, at very minimum, so
 
 ## setup overview
 ---
-**See MsMeds-DFU-Complete.pdf for complete install directions**
+**See [MsMeds-DFU-Complete.pdf](https://github.com/dbestcode/MsMeds/blob/main/patient_files/MsMeds-DFU-Complete.pdf)] for complete install directions**
 
 1. Setup server as described in *'MsMeds-DFU-Complete.pdf'*
     1. OS install
