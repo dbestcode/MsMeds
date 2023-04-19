@@ -24,7 +24,8 @@ Simulated Devices
   <link href='https://fonts.googleapis.com/css?family=Press Start 2P' rel='stylesheet'>
   <meta name='viewport' content='width=device-width, initial-scale=1.0'> 
   <link rel='shortcut icon' type='image/png' href='img/favicon.png'/>
-  <title>".$title."</title>".$extrahtml."
+  <title>".$title."</title>
+  ".$extrahtml."
 </head>";
   return htmlComment('head',$txthtml); 
 }
