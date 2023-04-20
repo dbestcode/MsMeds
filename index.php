@@ -7,7 +7,7 @@
  * 
  */
  
-define('LAST_WORK','1/8/2023'); //< --- @date
+define('LAST_WORK','4/18/2023'); //< --- @date
 define('PAGE_TITLE','Ms.Meds - EHR');
 define('PROJECT_VERSION','1.1');
 define('AUTH_CODE','54792390');
@@ -79,9 +79,9 @@ function htmlLoginForm(){
   {
 		$htmlpage .= "
     <p><h3>Please scan the Patient ID band<br/> or enter the MRN</h3>
-		<br><form action='".$_SERVER['PHP_SELF']."' method='post'>
+		<br><form id='myForm' action='".$_SERVER['PHP_SELF']."' method='post'>
     <input name='originForm' type='hidden' value='".FRM_PATIENT_CODE."'>
-		<input type='text' name='PatientBarcode' autofocus></form></p>";
+		<input type='text' name='PatientBarcode' id='myInput' ></form></p>";
 	/* A Valid user ID has been entered, prompt for a 'pin'
 	 * Post:UnHashPin
 	 */
@@ -93,7 +93,7 @@ function htmlLoginForm(){
 		<p>Enter your PIN
 		<br><form action='".$_SERVER['PHP_SELF']."' method='post'>
     <input name='originForm' type='hidden' value='".FRM_PIN."'>
-    <input type='password' name='UnHashPin' autofocus>
+    <input id='Pin' type='password' name='UnHashPin' id='myInput' autofocus>
     </form>
 		or <a href='logout.php'>return to login</a>";
 	/* No session variables of consiquence are set prompt for user name
@@ -103,10 +103,11 @@ function htmlLoginForm(){
   else 
   {
 		$htmlpage .= "
-    <p>Please scan your ID now.</p>
-		<br><form action='".$_SERVER['PHP_SELF']."' method='post' onsubmit='return validateForm()'>
+    <p>Please scan your ID now.</p></br>
+    <form id='myForm' action='".$_SERVER['PHP_SELF']."' method='post' onsubmit='return validateForm()'>
     <input name='originForm' type='hidden' value='".FRM_USER_ID."'>
-    <input type='text' name='barcode' autofocus></form>";
+    <input type='text' name='barcode' id='myInput' >
+    </form>";
 	}
   return $htmlpage;
 }
@@ -117,10 +118,30 @@ function pageMain($htmlcontent){
     function validateForm() {
       let x = document.forms[\"input\"][\"barcode\"].value;
       if (x == \"\") {
-      alert(\"Please Scan a Valid Barcode\");
-      return false;
+        alert(\"Please Scan a Valid Barcode\");
+        return false;
       }
     }
+ var timerId = null;
+      
+      var lastKeyTime = null;
+      
+      document.addEventListener('keypress', function(event) {
+      var input = document.getElementById('myInput');
+        if (event.key === 'Enter') {
+          document.getElementById('myForm').submit();
+        } else {
+          var currentTime = new Date().getTime();
+          if (lastKeyTime && currentTime - lastKeyTime > 300) {
+            input.value = '';
+          }
+          input.value += event.key;
+          lastKeyTime = currentTime;
+        }
+      });
+      
+   
+
     </script>";
     echo getHead(PAGE_TITLE,LAST_WORK,$validscript).getTitle("")."
   <div id='ccontainer' class='container' style='height:400px'>

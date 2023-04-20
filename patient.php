@@ -186,12 +186,22 @@ $validscript ="
 <script>
 
 function validateMedAdmin() {
-	const x = document.forms['adminmed']['admintime'].value;
-	const id = document.forms['adminmed']['drugid'].value;
-	if (x == '') {
+//<tr><td>'Sim' Time:(e.x. 1415)</td><td><input type='text' name='admintime' ></td></tr>
+  event.preventDefault();
+  var extraValue = prompt('Please enter a administration time:(e.x. 1415):');
+  if (extraValue) {
+    var form = document.getElementById('frmAdmin');
+    var input = document.createElement('admintime');
+    input.setAttribute('type', 'hidden');
+    input.setAttribute('name', 'extraInput');
+    input.setAttribute('value', extraValue);
+    form.appendChild(input);
+  } else {
 		alert('Enter a time, move to next box and scan a drug');
+    document.forms['adminmed']['drugid'].value = '';
 		return false;
 	}
+  const id = document.forms['adminmed']['drugid'].value;
   if (id == '') {
 		alert('Enter a time, move to next box and scan a drug');
 		return false;
@@ -200,18 +210,20 @@ function validateMedAdmin() {
 
 	let txt = '';
 	for (let x in rights) {
-		txt += rights[x] + '?\n';
+		txt += rights[x] + '?';
 	}
-	if (confirm('Do you have the right \n' +txt )) {
+	if (confirm('Do you have the right ' +txt )) {
 		//alert('Proceed with Medication Administration');
 	} else {
 		alert('Administration Canceled...');
 		return false;
 	}
+  form.action = '".htmlspecialchars($_SERVER["PHP_SELF"])."'
+  form.submit();
 }
 </script>
 ";
-echo getHead(PAGE_TITLE,LAST_WORK,$c).getTitle("");
+echo getHead(PAGE_TITLE,LAST_WORK,$validscript).getTitle("");
 
 
 	
@@ -250,10 +262,10 @@ echo "  <embed src='patient_files/" . $_SESSION["MarFile"] .
         <li>Tab to next box</li>
         <li>Scan a medication</li>
       </ol></span>";
-			echo "<form name='adminmed' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) ."' onsubmit='return validateMedAdmin()' method='post'>
+			echo "<form id='frmAdmin' name='adminmed' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) ."' onsubmit='return validateMedAdmin()' method='post'>
 			<table class='nnote'>
-			<tr><td>'Sim' Time:(e.x. 1415)</td><td><input type='text' name='admintime' ></td></tr>
-			<tr><td>Scan Medication:<br></td><td><input type='text' name='drugid' autofocus>";
+			
+			<tr><td>Scan Medication:<br></td><td><input id='txtDrugId' type='text' name='drugid' autofocus>";
 			
 			if(isset($_POST["drugid"])) {
 				if($_POST["drugid"]=="0") {
@@ -356,6 +368,7 @@ function openTab(evt, tabName) {
 	}
 	document.getElementById(tabName).style.display = "block";
 	evt.currentTarget.className += " active";
+  document.getElementById("txtDrugId").focus();
 }
 </script>
 </div>
